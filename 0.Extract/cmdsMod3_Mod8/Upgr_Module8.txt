@@ -1,0 +1,81 @@
+start hbase and create table
+
+
+1) create 'salesdata', 'count'
+
+create 'salesdata_05mar', 'count'
+
+scan 'salesdata_05mar'
+
+2) truncate 'salesdata'
+
+cd /home/edureka/hbase/hbase-0.98.17-hadoop2
+
+bin/start-hbase.sh
+
+
+./bin/hbase shell
+
+list
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /home/edureka/kafka_2.10-0.8.2.2
+
+Start Kafka
+//No need to start the zookeeper. HBase Zookeeper will be used.
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+bin/kafka-server-start.sh config/server.properties
+
+Create topic
+
+bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic salestopic_05mar
+
+bin/kafka-topics.sh --list --zookeeper localhost:2181
+
+bin/kafka-console-producer.sh --broker-list localhost:9092 --topic salestopic_05mar
+
+
+2016-03-01 16:41:55,1000,33,70.508282
+2016-03-01 16:41:55,1000,34,83.027239
+2016-03-01 16:41:55,1000,35,91.022713
+
+
+Run the projects in IDE
+
+5) Run the projects in Scala IDE
+
+
+
+1) Add metrics-core and google-collection jars to Final Project
+
+2) Add jcommon and jfreechart jars to Visualization project
+
+
+HBase Install
+~~~~~~~~~~~~~
+download hbase from http://a.mbbsindia.com/hbase/0.98.17/hbase-0.98.17-hadoop2-bin.tar.gz
+
+tar xzvf hbase-0.98.17-hadoop2-bin.tar.gz
+cd hbase-0.98.17-hadoop2
+
+
+conf/hbase-site.xml
+
+
+<configuration>
+  <property>
+    <name>hbase.rootdir</name>
+    <value>file:///home/edureka/hbase</value>
+  </property>
+  <property>
+    <name>hbase.zookeeper.property.dataDir</name>
+    <value>/home/edureka/testuser/zookeeper</value>
+  </property>
+</configuration>
+
+
+bin/start-hbase.sh
+
+
+./bin/hbase shell

@@ -1,0 +1,15 @@
+object Main11 extends App{	
+//----------------------------------------------------------------------------//
+  def sum(f: Int=> Int, a: Int, b: Int): Int=
+			if(a > b) 0
+			else f(a) + sum(f, a + 1, b)
+//----------------------------------------------------------------------------//			
+	def cube(x: Int): Int= x * x * x
+//----------------------------------------------------------------------------//
+	def sumCubes(a: Int, b: Int) = sum(cube, a, b)
+//def sumCubes(a:Int, b:Int) = sum(x=>x*x*x, a, b) //Anonymous functions -instead of defining a name & definition are used directly
+  //def sum(a:Int, b:Int) = sum(x:Int,y:Int=>x+y, a, b) // anonymous function 
+//----------------------------------------------------------------------------//
+	println(sumCubes(3,5))
+	  
+}

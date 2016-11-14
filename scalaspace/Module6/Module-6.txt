@@ -1,0 +1,110 @@
+val sampleData = 1 to 500
+
+// here sparkcontext is used so an RDD is created
+// parallelize the range & an RDD of intergers   is created
+val totData = sc.parallelize(sampleData)   
+
+
+//filter is an higher order functions & apply the 
+//accepted function on each element
+//another RDD is created
+val result = totData.filter(_ %2 ==0)
+
+
+//this "Action" will trigger what all the RDD needed
+result.collect()
+
+##############################################################################
+//parllelizing the data twice .to achieve the job completion early
+val totDatapar = sc.parallelize(sampleData,2)   
+
+val resultpar = totDatapar.filter(_ %2 ==0)
+
+resultpar.collect()
+#############################################################################
+//to check Number of CPU Cores
+Linux command :# lscpu 
+
+no of parallel tasks depends up on the no of cores
+
+############################################################################
+				PYSPARK(same as sparkshell functionality) 
+./bin/pyspark
+
+//read each line and make it as a record in the RDD
+textFile= sc.textFile("hdfs://localhost:8020/raam/readFile.txt")
+
+//lambda  is anonymous function in python
+linesWithSpark= textFile.filter(lambda line: "Spark"in line)
+linesWithSpark.count()
+
+textFile.count() # Number of items in this RDD
+textFile.first() # First item in this RDD
+
+textFile.filter(lambda line: "Spark"in line).count() # How many lines contain "Spark"
+
+exit()
+####################################################################################################
+						Running Spark App
+sbt package
+export SPARK_HOME="/home/edureka/spark-1.4.0/"
+
+$SPARK_HOME/bin/spark-submit  \
+--class "readFile"         \
+--master local[2]             \
+/home/edureka/scalaspace/Module6/Demo/target/scala-2.10/spark-wordcount_2.10-1.0.jar  \
+$SPARK_HOME//home/edureka/scalaspace/Module5/readFile.txt
+
+$SPARK_HOME/bin/spark-submit --class "LogAnalyzer" --master local[2] /home/edureka/scalaspace/Module6/Demo/target/scala-2.10/spark-wordcount_2.10-1.0.jar /home/edureka/scalaspace/Module5/readFile.txt
+------------------------------------
+in /conf/spark-defaults.conf
+# spark.eventLog.dir               hdfs://namenode:8021/directory
+------------------------------------------------------------------------
+######################################    STARTING MASTER Slave  ##########################################################
+
+./sbin/start-master.sh
+
+cat ./logs/spark-edureka-org.apache.spark.deploy.master.Master-1-localhost.localdomain.out
+	Starting Spark master at spark://localhost.localdomain:7077
+	Started MasterWebUI at http://10.0.2.15:8080
+-------------
+starting the worker & attaching it to master
+
+./bin/spark-class org.apache.spark.deploy.worker.Worker spark://localhost.localdomain:7077 &
+-----------------
+$SPARK_HOME/bin/spark-submit --class "readFile" --master spark://localhost.localdomain:7077 /home/edureka/scalaspace/Module6/Demo/target/scala-2.10/spark-wordcount_2.10-1.0.jar hdfs://localhost:8020/raam/readFile.txt
+###########################################################################################################################################################33
+
+								Persistance - its not going to kill that RDD & store it to disk
+
+spark-shell:
+
+val a = sc.parallelize(1 to 100)      //creating an RDD with values 1 to 100
+a.getStorageLevel.description         //check the storage level ;;o/p: serialized 1x replicated
+a.count
+
+// if this needs more space;and it feels that this RDD is not used at all;
+//then it will store this RDD to disk
+a.persist(Org.apache.spark.storage.StorageLevel.DISK_ONLY)     // (or) a.cache()
+a.getStorageLevel.description         //check the storage level ;;o/p: disk serialized 1x replicated
+
+a.count
+//after execution, now check the spark-shell UI :Storage
+
+a.unpersist(true)
+
+
+//always we cant provide enough memory with huge amount of data.so spark has MEMORY_ONLY,MEMORY_AND_DISK,DISK_ONLY
+//MEMORY_ONLY_SER - it going to consume little more processing capacity
+
+//By default one replicate is maintained
+//Suppose if cluster size is huge & we perform huge no. of iterations,then we can increase the replicas by MEMORY_ONLY_2
+//so that the process is done on another machine also,so that we can run jobs in parallel
+
+##############################################################################################################
+server log analysis sample data:
+
+WARN:	2014-09-10	Normal just logging
+ERROR:	2014-09-10	mysql connection refused
+ERROR:	2014-09-10	mysql table does not exist
+WARN:	2014-09-10	php unused connection

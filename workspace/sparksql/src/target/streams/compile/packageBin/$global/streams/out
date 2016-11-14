@@ -1,0 +1,13 @@
+[0m[[0minfo[0m] [0mPackaging /home/edureka/workspace/sparksql/src/target/scala-2.10/raam_2.10-1.0.jar ...[0m
+[0m[[0mdebug[0m] [0mInput file mappings:[0m
+[0m[[0mdebug[0m] [0m	SQLMain1$delayedInit$body.class[0m
+[0m[[0mdebug[0m] [0m	  /home/edureka/workspace/sparksql/src/target/scala-2.10/classes/SQLMain1$delayedInit$body.class[0m
+[0m[[0mdebug[0m] [0m	SQLMain1.class[0m
+[0m[[0mdebug[0m] [0m	  /home/edureka/workspace/sparksql/src/target/scala-2.10/classes/SQLMain1.class[0m
+[0m[[0mdebug[0m] [0m	Author.class[0m
+[0m[[0mdebug[0m] [0m	  /home/edureka/workspace/sparksql/src/target/scala-2.10/classes/Author.class[0m
+[0m[[0mdebug[0m] [0m	SQLMain1$.class[0m
+[0m[[0mdebug[0m] [0m	  /home/edureka/workspace/sparksql/src/target/scala-2.10/classes/SQLMain1$.class[0m
+[0m[[0mdebug[0m] [0m	Author$.class[0m
+[0m[[0mdebug[0m] [0m	  /home/edureka/workspace/sparksql/src/target/scala-2.10/classes/Author$.class[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m

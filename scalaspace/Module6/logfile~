@@ -1,0 +1,5 @@
+WARN:	2014-09-10	Normal just logging
+ERROR:	2014-09-10	mysql connection refused
+ERROR:	2014-09-10	mysql table does not exist
+WARN:	2014-09-10	php unused connection
+WARN:	2014-09-10	mysql unused connectio

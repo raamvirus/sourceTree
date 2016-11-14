@@ -1,0 +1,221 @@
+sudo service hadoop-master stop
+sudo service hadoop-master start
+	starts the namenode ,datanotes
+sudo jps	
+---------------------------------------------------------------------------------
+cd spark-1.5.2
+
+./bin/spark-shell
+
+locahost:4040
+
+val sampleData = 1 to 50000
+
+val totData = sc.parallelize(sampleData)    // parallelize - creates an RDD // range will have one thread of process
+											// where as HDFS will have blocks
+val intermediate = totData.filter(_ %2 ==0).collect()
+
+intermediate.collect()						// click on the job to see the DAG
+											//Action : collect is the consolidation task that merges the final o/p
+--------------------------------------------------------------------------------------------------------------------------------
+val c = sc.parallelize(1 to 50,10)			// parallelize into 10 pieces in single machine's memory
+c.filter(_ %2 ==0).collect()
+// TaskSetManager: Finished task 9.0 in stage 1.0 (TID 10) in 4 ms on localhost (10/10)
+//check of the event timeline
+
+exit
+--------------------------------------------------------------------------------------------------------------------------------
+
+#Pyspark
+~~~~~~~~
+
+./bin/pyspark
+
+textFile = sc.textFile("file:///home/edureka/spark-1.5.2/README.md",3)
+
+textFile.count()
+
+textFile.first()
+
+
+linesWithSpark = textFile.filter(lambda line: "Spark" in line)
+
+linesWithSpark.count()
+
+textFile.filter(lambda line: "Spark" in line).count()
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+#Spark R
+~~~~~~~~
+
+#Install R
+
+# redhat package manager
+
+
+sudo rpm -ivh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+
+sudo yum install R
+
+#in spark directory
+
+SPARK_VERSION=1.5.2 ./R/install-dev.sh
+
+
+-----------------------
+
+./bin/sparkR
+
+sc <- sparkR.init()
+
+sqlContext <- sparkRSQL.init(sc)
+
+df <- createDataFrame(sqlContext,faithful)
+
+head(df)
+
+nrow(df)
+
+head(df, n=10)
+
+
+people <- read.df (sqlContext, "file:///home/edureka/spark-1.5.2/examples/src/main/resources/people.json","json")
+
+head(people)
+
+printSchema(people)
+
+
+q()
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+./bin/spark-shell
+
+val textFile = sc.textFile("file:///home/edureka/spark-1.5.2/README.md")
+
+textFile.count()
+
+textFile.first()
+
+val linesWithSpark = textFile.filter(line => line.contains("Spark"))
+
+textFile.filter(line => line.contains("Spark")).count()
+
+
+val test2 = textFile.map(line => line.split(" ").size).reduce((a,b) => if(a > b) a else b) // display the count of largest line
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+Persistence
+~~~~~~~~~~~
+val result = sc.parallelize(1 to 100)
+
+result.persist(org.apache.spark.storage.StorageLevel.MEMORY_ONLY)
+result.getStorageLevel.description
+result.count
+
+val b = sc.parallelize(1 to 100)
+
+b.persist(org.apache.spark.storage.StorageLevel.MEMORY_ONLY)
+b.getStorageLevel.description
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Persistence Cache verification
+
+
+val c = sc.parallelize(1 to 100,5)
+c.getStorageLevel.description
+c.cache()
+c.getStorageLevel.description
+c.count
+c.unpersist(true)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--------------------------------------------------------------------------------------------------------------------------------
+eclipse project generation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+http://www.nodalpoint.com/development-and-deployment-of-spark-applications-with-scala-eclipse-and-sbt-part-1-installation-configuration/
+
+mkdir -p ~/.sbt/0.13/plugins
+
+---
+create plugins.sbt
+
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "4.0.0")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.13.0")
+---
+sbt package
+sbt eclipse
+---
+Open Scala IDE Eclispe
+file -> import -> existing projects into workspace -> select the project folder
+Run as scala application
+----------------------------------------------------------------------------------------
+Note: to avoid win util error
+
+http://nanxiao.me/en/build-apache-spark-application-in-intellij-idea-14-1/
+
+val logFile = "./server_log"
+
+
+In VM
+~~~~~
+mkdir <batch>
+mkdir eclipse
+
+cp -r /home/edureka/demo_data/Server_Log_Analysis/* /home/edureka/14mar/eclipse/Server_Log_Analysis
+
+sbt package
+sbt eclipse
+
+
+To supress logs //default comes from referenced library
+ val rootLogger = Logger.getRootLogger()
+    rootLogger.setLevel(Level.ERROR)  
+    
+    
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+Server_Log Analysis
+
+cd F:\squarks\Training\Edureka\Scala_Spark\practicals\Upgr_code\Module4\sbt\Server_log_Analysis
+
+sbt package
+
+
+./bin/spark-submit --class "LogAnalyzer" --master local /home/edureka/14mar/eclipse/Server_Log_Analysis/target/scala-2.10/server-log-analysis_2.10-1.0.jar
+
+
+
+#Submitting in server mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+./sbin/start-master.sh
+./sbin/start-slave.sh spark://localhost.localdomain:7077
+
+
+localhost:8080
+
+export SPARK_LOCAL_IP=10.0.2.15
+
+
+./bin/spark-submit --class "LogAnalyzer" --master spark://localhost.localdomain:7077 /home/edureka/15feb/eclipse/Server_Log_Analysis/target/scala-2.10/server-log-analysis_2.10-1.0.jar
+
+./bin/spark-submit --class "LogAnalyzer" --master spark://10.0.2.15:7077 /home/edureka/15feb/eclipse/Server_Log_Analysis/target/scala-2.10/server-log-analysis_2.10-1.0.jar
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#Using spark shell
+
+./bin/spark-shell
+
+
+

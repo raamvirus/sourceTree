@@ -1,0 +1,666 @@
+import sys.process._
+scala> "ls -al" !
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://10.0.2.15:4040/jobs/
+http://localhost.localdomain:8080/
+https://trongkhoanguyenblog.wordpress.com/2014/11/27/understand-rdd-operations-transformations-and-actions/
+http://www.supergloo.com/fieldnotes/apache-spark-examples-of-transformations/
+############################### Anonymous vs static functions ####################################################
+(s => s.split(" "))            or  (_.split("\t"))
+reduceByKey((a, b) => a + b)   or  reduceByKey(_ + _)
+```````````````````````````````````````````````````````````````````````````
+object MyFunctions {
+  def splitline(s: String): Array[String] = s.split(" ")
+}
+defined module MyFunctions
+
+val words = file.map(MyFunctions.splitline).collect
+Array[Array[String]] = Array(Array(1,The, Nightmare, Before, Christmas,1993,3.9,4568), Array(2,The, Mummy,1932,3.5,4388))
+
+####################################################  RDDs #####ip##########################################
+*Resilient Distributed Datasets (RDD) is an immutable distributed collection of objects.
+*Each dataset in RDD is divided into logical partitions, which may be computed on different nodes of the cluster.
+*RDDs can contain any type of Python, Java, or Scala objects, including user-defined classes.
+
+*Formally, an RDD is a read-only, partitioned collection of records
+*There are two ways to create RDDs −
+`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+			1.Parallelized collections are created by calling SparkContext’s parallelize method on an existing collection.
+				When calling parallelize, the elements of the collection are copied to form a distributed dataset that can be operated on in parallel.	
+				parallelized collection holding the numbers 1 to 5
+				scala> val data = Array(1, 2, 3, 4, 5)
+					   data: Array[Int] = Array(1, 2, 3, 4, 5)
+				scala> val distData = sc.parallelize(data,10)------10 reduce tasks(10 number of partitions.one task for each partition) will run
+                       distData: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[1] at parallelize
+				scala>distData.reduce((a, b) => a + b) o/p: 15       or distData.reduce(_ + _)
+				scala>distData.reduce((a, b) => a * b) o/p: 120
+```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````				
+			2.referencing a dataset in an external storage system
+				scala> val file = sc.textFile("hdfs://localhost:8020/raam/file.txt",2)
+						file: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[1] at textFile----i.e  Array[String] with space & new characters
+				scala> file.collect //take(2)
+						res1: Array[String] = Array(1,The Nightmare Before Christmas,1993,3.9,4568, 2,The Mummy,1932,3.5,4388,)
+						
+				scala>  val split = file.map(s => s.split(" ")).collect;
+						 Array[Array[String]] = Array(Array(1,The, Nightmare, Before, Christmas,1993,3.9,4568), Array(2,The, Mummy,1932,3.5,4388))
+				scala> val split = file.flatMap(s => s.split(" ")).collect;		 
+						  Array(1,The, Nightmare, Before, Christmas,1993,3.9,4568, 2,The, Mummy,1932,3.5,4388)
+						  
+				scala>val lens =file.map(s => s.length).collect 
+						 Array(46, 25)
+				scala> lens.reduce((a, b) => a + b)	
+						 Int = 71
+						 
+				scala> val srdd  =file.map(s => (s, 1)).reduceByKey((a, b) => a + b)
+						srdd: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[25] at reduceByKey
+				scala> srdd.collect
+						res0: Array[(String, Int)] = Array((2,The Mummy,1932,3.5,4388,1), (1,The Nightmare Before Christmas,1993,3.9,4568,1))
+				scala> srdd.sortByKey().collect		
+						res3: Array[(String, Int)] = Array((1,The Nightmare Before Christmas,1993,3.9,4568,1), (2,The Mummy,1932,3.5,4388,1))
+
+				val file = sc.textFile("hdfs://quickstart.cloudera:8020/raam/readFile.txt")
+				val counts = file.flatMap(line => line.split(" ")).map(word => (word, 1)).reduceByKey(_ + _)
+							counts: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[8] at reduceByKey
+				counts.collect
+				res1: Array[(String, Int)] = Array((Hadoop.,2), (Spark,2), (faster,1))
+				 
+				 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				 val countRdd = distFile.flatMap(lines =>lines.split(" ")).map(word => (word,1))
+														 .reduceByKey(_ + _, 1)  // 2nd arg configures one task (same as number of partitions)
+													     .map(item => item.swap) // interchanges position of entries in each tuple
+                                                         .sortByKey(true, 1) // 1st arg configures ascending sort, 2nd arg configures one task
+                                                         .map(item => item.swap)
+				 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RDDs support Three types of operations:
+#############################################   Transformations   ##################################
+Transformations, which create a new dataset from an existing one, All transformations in Spark are lazy,
+
+map-is a transformation that passes each dataset element through a function and returns a new RDD representing the results.
+flatMap
+reduceByKey
+filter
+groupByKey
+sortByKey
+join
+sample
+
+##############################################  Actions  ##########################################
+Actions, which return a value to the driver program after running a computation on the dataset
+
+reduce-is an action that aggregates all the elements of the RDD using some function and returns the final result to the driver program 
+		(although there is also a parallel reduceByKey that returns a distributed dataset).
+collect()
+first()
+count()
+take(n)
+foreach()
+
+saveAsTextFile(path)
+saveAsObjectFile(path)
+saveAsSequenceFile(path)
+############################################## Persist #####################################################################
+By default, each transformed RDD may be recomputed each time you run an action on it.
+However, you may also persist an RDD in memory using the persist (or cache) method, in which case Spark will keep the elements around on the cluster for much faster access the next time you query it.
+There is also support for persisting RDDs on disk, or replicated across multiple nodes.
+
+val lines = sc.textFile("data.txt")
+val lineLengths = lines.map(s => s.length)
+lineLengths.persist()					//If we also wanted to use lineLengths again later, which would cause lineLengths to be saved in memory after the first time it is computed.
+val totalLength = lineLengths.reduce((a, b) => a + b)
+
+At this point Spark breaks the computation into tasks to run on separate machines, 
+and each machine runs both its part of the map and a local reduction, returning only its answer to the driver program.
+
+############################################################    Log Mining    #####################################################################################
+
+// base RDD
+val lines = sc.textFile("hdfs://localhost:8020/raam/logfile")
+res13: Array[String] = Array(WARN:	2014-09-10	Normal just logging, ERROR:	2014-09-10	mysql connection refused, ERROR:	2014-09-10	mysql table does not exist, WARN:	2014-09-10	php unused connection, WARN:	2014-09-10	mysql unused connectio)
+
+//Transformed RDDs
+val errors = lines.filter(_.startsWith("ERROR"))   //val errors = lines.filter(line => line.contains("Spark"))
+res15: Array[String] = Array(ERROR:	2014-09-10	mysql connection refused, ERROR:	2014-09-10	mysql table does not exist)
+
+val messages1 = errors.map(_.split("\t"))
+res16: Array[Array[String]] = Array(Array(ERROR:, 2014-09-10, mysql connection refused), Array(ERROR:, 2014-09-10, mysql table does not exist))
+
+val messages = messages1.map(r => r(1))
+res17: Array[String] = Array(2014-09-10, 2014-09-10)
+res21: Array[String] = Array(mysql connection refused, mysql table does not exist)
+
+messages.cache()
+res18: messages.type = MapPartitionsRDD[15] at map at <console>:27
+																				
+//action 1
+messages.filter(_.contains("mysql")).count()
+res23: Long = 2
+
+
+//action 2
+messages.filter(_.contains("php")).count()
+res24: Long = 0
+
+############################################### Scala vs Python vs Java#################################
+
+Scala :
+
+val distFile = sc.textFile("hdfs://localhost:8020/raam/readFile.txt")
+res0: Array[String] = Array(Welcome to Spark on Hadoop., Spark is faster than Hadoop., Hello Raam .Sprak, welocme cow)
+
+distFile.map(l => l.split(" ")).collect()
+res1: Array[Array[String]] = Array(Array(Welcome, to, Spark, on, Hadoop.), Array(Spark, is, faster, than, Hadoop.), Array(Hello, Raam, .Sprak), Array(welocme, cow))
+
+val words = distFile.flatMap(l => l.split(" ")).collect()
+res2: Array[String] = Array(Welcome, to, Spark, on, Hadoop., Spark, is, faster, than, Hadoop., Hello, Raam, .Sprak, welocme, cow)
+
+val count = words.map(word => (word, 1)).reduceByKey(_ + _)
+
+Python :(pyspark)
+
+distFile = sc.textFile("hdfs://localhost:8020/raam/readFile.txt")
+distFile.map(lambda l : l.split(" ")).collect()
+distFile.flatMap(lambda l : l.split(" ")).collect()
+
+counts = text_file.flatMap(lambda line: line.split(" ")) \
+             .map(lambda word: (word, 1)) \
+             .reduceByKey(lambda a, b: a + b)
+
+Java 8 :
+
+JavaRDD<String> distFile = sc.textFile("")
+JavaRDD<String> words = distFile.flatMap(line -> Arrays.asList(line.split(" ")));
+
+Java 7 :
+
+// Load our input data.
+JavaRDD<String> input = sc.textFile(inputFile);
+
+// Split up into words.
+JavaRDD<String> words = input.flatMap(
+		new FlatMapFunction<String, String>() {
+			public Iterable<String> call(String x) {
+				return Arrays.asList(x.split(" "));
+		}});
+##################################################################################################################################
+											//Initializing Spark in Scala
+	import org.apache.spark.SparkConf
+	import org.apache.spark.SparkContext
+	import org.apache.spark.SparkContext._							//In scala, _ acts similar to * in java while importing packages.
+	
+	val conf = new SparkConf().setMaster("local").setAppName("My App")
+	val sc = new SparkContext(conf)
+
+################################################# Word Count #####################################################################
+package org.apache.spark;
+
+//Initializing Spark in Java
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
+
+public class Main {
+	public static void main(String[] args) {
+		// Create a Java Spark Context
+		SparkConf conf = new SparkConf();
+				conf.setMaster("local");          			 		// local[3] or local[*] or "spark:// sparkcluster-url" or "mesos:// mesoscluster-url"
+				conf.setAppName("My App");
+		JavaSparkContext sc = new JavaSparkContext(conf);   		// or JavaSparkContext sc = new JavaSparkContext("local","My App");
+
+		// Load our input data.
+		JavaRDD<String> input = sc.textFile("/user/dir/*");
+		
+		//Load user-defined data.
+		ArraList<String> book = new ArrayList<String>();
+		book.add("call me Raam'");
+		book.add("Some years ago never mind");
+		JavaRDD<String> lines = sc.parallelize(book); // java rdd of strings
+		JavaRDD<String> lines = sc.parallelize(book,10); // ten part-0 dir will be created
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Java 8 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
+		List<Tuple2<String, Integer>> results =
+				lines.flatMap(line -> Arrays.asList(line.split(“ “)))    	// flatmap needs some iterable 
+				.mapToPair(word -> new Tuple2<String,Integer>(word, 1))		// for each word
+				.reduceByKey((x, y) -> x + y) 					            //.reduceByKey((current, accumulator) -> current + accumulator)
+				.collect();				//first()-only first
+										//collect()-bring all results to driver
+										//saveAsTextFile("data/output")-----only one partitioner
+o/p: [(particular,1),(log,2)]				
+~~~~~~~~~~~~~~~~~~~~~~~Java 7~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~			  
+		// Split up into words.
+		JavaRDD<String> words = input.flatMap(
+			new FlatMapFunction<String, String>() {
+				public Iterable<String> call(String x) {
+					return Arrays.asList(x.split(" "));
+		}});
+		
+		// Transform into pairs and count.
+		JavaPairRDD<String, Integer> counts = words.mapToPair(
+			new PairFunction<String, String, Integer>(){
+				public Tuple2<String, Integer> call(String w){
+					return new Tuple2(w, 1);
+		}})
+		.reduceByKey(new Function2<Integer, Integer, Integer>(){
+			public Integer call(Integer x, Integer y){ return x + y;}});
+			
+		// Save the word count back out to a text file, causing evaluation.
+		counts.saveAsTextFile(outputFile);
+	}
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pyspark ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>lines = sc.parallelize(["I am a worker node", "I am writing"])
+>>>lines;
+ParallelCollectionRDD[11] at parallelize at PythonRDD.scala:396
+
+>>>lines.flatMap(lambda line : line.split(" "))
+				.map(lambda word :(word, 1))	
+				.reduceByKey(lambda current, accumulator : current + accumulator)
+				.collect();				
+[('a', 1), ('node', 1), ('I', 2), ('worker', 1), ('am', 2), ('writing', 1)]
+
+Note:reduceByKey implements HashPartitioner - so it spark has inbuilt combiner
+
+#################### Reading an object file ############################################################################################
+./spark-shell
+
+>val data = sc.objectFile("hdfs://localhost:8020/raam/Working_Files/Chapter_2/object-example/*")
+data: org.apache.spark.rdd.RDD[Nothing] = MapPartitionsRDD[5] at objectFile at <console>:21
+
+>data.first; //error
+org.apache.spark.SparkDriverExecutionException: Execution error
+
+>val data = sc.objectFile[String]("hdfs://localhost:8020/raam/Working_Files/Chapter_2/object-example/*")
+data: org.apache.spark.rdd.RDD[String] = MapPartitionsRDD[5] at objectFile at <console>:21
+
+>data.first; 
+res2: String = 1::Toy Story (1995)::Adventure|Animation|Children|Comedy|Fantasy
+
+>data.toDebugString
+res1: String = 
+(2) MapPartitionsRDD[3] at objectFile at <console>:21 []
+ |  hdfs://localhost:8020/raam/Working_Files/Chapter_2/object-example/* HadoopRDD[2] at objectFile at <console>:21 []
+
+> data.filter(_.startsWith("1")).toDebugString
+res3: String = 
+(2) MapPartitionsRDD[5] at filter at <console>:24 []
+ |  MapPartitionsRDD[3] at objectFile at <console>:21 []
+ |  hdfs://localhost:8020/raam/Working_Files/Chapter_2/object-example/* HadoopRDD[2] at objectFile at <console>:21 []
+ 
+>data.toDebugString
+
+>data.map(line => line.split("::")).first() 
+res4: Array[String] = Array(1, Toy Story (1995), Adventure|Animation|Children|Comedy|Fantasy)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+scala> case class Category(name: String)
+     defined class Category
+
+scala> case class Movie(id: Int,name:String,topics : List[Category])
+      defined class Movie
+
+scala> val movies = data.map(line => line.split("::")).map(columns => Movie(columns(0).toInt, columns(1), columns(2).split("\\|").map(Category(_)).toList))
+		movies: org.apache.spark.rdd.RDD[Movie] = MapPartitionsRDD[10] at map at <console>:27
+
+scala> movies.first
+	   Movie = Movie(1,Toy Story (1995),List(Category(Adventure), Category(Animation), Category(Children), Category(Comedy), Category(Fantasy)))
+
+scala> movies.toDebugString
+	res3: String = 
+		(2) MapPartitionsRDD[3] at map at <console>:27 []
+		|  MapPartitionsRDD[2] at map at <console>:27 []
+		|  MapPartitionsRDD[1] at objectFile at <console>:21 []
+		|  hdfs://localhost:8020/raam/Working_Files/Chapter_2/object-example/* HadoopRDD[0] at objectFile at <console>:21 []
+
+scala> val allTopics = movies.flatMap(movies => movies.topics)
+		allTopics: org.apache.spark.rdd.RDD[Category] = MapPartitionsRDD[4] at flatMap at <console>:29
+		
+scala> allTopics.take(2)
+			res5: Array[Category] = Array(Category(Adventure), Category(Animation))
+---------
+scala> val allmap = movies.map(movies => movies.topics)
+		allmap: org.apache.spark.rdd.RDD[List[Category]] = MapPartitionsRDD[4] at map at <console>:29
+scala> allmap.take(2)
+	res1: Array[List[Category]] = Array(List(Category(Adventure), Category(Animation), Category(Children), Category(Comedy), Category(Fantasy)),
+										List(Category(Adventure), Category(Children), Category(Fantasy)))
+-----		
+scala> val topicHit = allTopics.map(topic => (topic,1)).reduceByKey(_ + _ )
+	topicHit: org.apache.spark.rdd.RDD[(Category, Int)] = ShuffledRDD[8] at reduceByKey at <console>:31
+	
+scala> topicHit.take(2)
+	res6: Array[(Category, Int)] = Array((Category(Mystery),229), (Category(Mystery),280))
+	
+scala> topicHit.sortBy({ case (category,count) => count},ascending = false).first()
+		res9: Array[(Category, Int)] = Array((Category(Drama),2776), (Category(Drama),2563))
+
+scala> val finalRDD = topicHit.sortBy({ case (category,count) => count},ascending = false)
+finalRDD: org.apache.spark.rdd.RDD[(Category, Int)] = MapPartitionsRDD[28] at sortBy at <console>:33
+
+scala> finalRDD.toDebugString
+res10: String = 
+(2) MapPartitionsRDD[28] at sortBy at <console>:33 []
+ |  ShuffledRDD[27] at sortBy at <console>:33 []
+ +-(2) MapPartitionsRDD[24] at sortBy at <console>:33 []
+    |  ShuffledRDD[8] at reduceByKey at <console>:31 []
+    +-(2) MapPartitionsRDD[7] at map at <console>:31 []
+       |  MapPartitionsRDD[4] at flatMap at <console>:29 []
+       |  MapPartitionsRDD[3] at map at <console>:27 []
+       |  MapPartitionsRDD[2] at map at <console>:27 []
+       |  MapPartitionsRDD[1] at objectFile at <console>:21 []
+       |  hdfs://localhost:8020/raam/Working_Files/Chapter_2/object-example/* HadoopRDD[0] at objectFile at <console>:21 []
+
+scala> 
+		
+			
+########################################### Join ################################################################################
+scala> val register = sc.textFile("hdfs://localhost:8020/raam/Working_Files/Chapter_2/join/reg.tsv").map(_.split("\t")) 
+		register: org.apache.spark.rdd.RDD[Array[String]] = MapPartitionsRDD[11] -------RDD of Array
+scala> register.collect
+res22: Array[Array[String]] = Array(Array(2014-03-02, 15dfb8e6cc4111e3a5bb600308919594, 1, 33.6599436237, -117.958125229), 
+									Array(2014-03-04, 81da510acc4111e387f3600308919594, 2, 33.8570099635, -117.855744398))
+
+scala> register.first
+		Array[String] = Array(2014-03-02, 15dfb8e6cc4111e3a5bb600308919594, 1, 33.6599436237, -117.958125229)
+		
+scala> case class Register(uuid: String, date: String, customerId: Int, lat:Double, long:Double)
+		defined class Register
+scala> val register = sc.textFile("hdfs://localhost:8020/raam/Working_Files/Chapter_2/join/reg.tsv").map(_.split("\t"))
+						.map(c => Register(c(1),c(0),c(2).toInt,c(3).toDouble,c(4).toDouble))
+		register: org.apache.spark.rdd.RDD[Register] = MapPartitionsRDD[15] at map -----RDD of objects
+scala> register.first
+		res24: Register = Register(15dfb8e6cc4111e3a5bb600308919594,2014-03-02,1,33.6599436237,-117.958125229)
+scala>register.collect
+	res23: Array[Register] = Array(Register(15dfb8e6cc4111e3a5bb600308919594,2014-03-02,1,33.6599436237,-117.958125229), 
+									Register(81da510acc4111e387f3600308919594,2014-03-04,2,33.8570099635,-117.855744398))
+
+scala> val register = sc.textFile("hdfs://localhost:8020/raam/Working_Files/Chapter_2/join/reg.tsv").map(_.split("\t"))
+				.map(c => Register(c(1),c(0),c(2).toInt,c(3).toDouble,c(4).toDouble))
+				.map(r => (r.uuid, r))
+	register: org.apache.spark.rdd.RDD[(String, Register)] = MapPartitionsRDD[34] at map 
+scala>register.collect
+	 Array[(String, Register)] = Array((15dfb8e6cc4111e3a5bb600308919594,Register(15dfb8e6cc4111e3a5bb600308919594,2014-03-02,1,33.6599436237,-117.958125229)),
+										(81da510acc4111e387f3600308919594,Register(81da510acc4111e387f3600308919594,2014-03-04,2,33.8570099635,-117.855744398)))
+```````````````````````````````````````````````````````````````````````````````````````````````````````````
+scala> case class Click(uuid: String, date: String, pageId: Int)
+scala> val clicks = sc.textFile("hdfs://localhost:8020/raam/Working_Files/Chapter_2/join/clk.tsv").map(_.split("\t")).map(c=>(c(1), Click(c(1), c(0), c(2).toInt)))
+	clicks: org.apache.spark.rdd.RDD[(String, Click)] = MapPartitionsRDD[43] at map 
+scala> clicks.first()
+	 Array[(String, Click)] = Array((15dfb8e6cc4111e3a5bb600308919594,Click(15dfb8e6cc4111e3a5bb600308919594,2014-03-04,11)),
+									(81da510acc4111e387f3600308919594,Click(81da510acc4111e387f3600308919594,2014-03-06,61)))
+scala> val joined = clicks.join(register)
+		joined: org.apache.spark.rdd.RDD[(String, (Click, Register))] = MapPartitionsRDD[46] at join at <console>:29
+````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+scala> joined.collect
+ Array[(String, (Click, Register))] = Array((81da510acc4111e387f3600308919594,
+												(Click(81da510acc4111e387f3600308919594,2014-03-06,61),
+												Register(81da510acc4111e387f3600308919594,2014-03-04,2,33.8570099635,-117.855744398))),
+											(15dfb8e6cc4111e3a5bb600308919594,
+												(Click(15dfb8e6cc4111e3a5bb600308919594,2014-03-04,11),
+												Register(15dfb8e6cc4111e3a5bb600308919594,2014-03-02,1,33.6599436237,-117.958125229)))
+											)
+`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+scala> val cogroup = clicks.cogroup(register)
+		cogroup: org.apache.spark.rdd.RDD[(String, (Iterable[Click], Iterable[Register]))] = MapPartitionsRDD[48] at cogroup at <console>:29
+
+scala> cogroup.collect
+: Array[(String, (Iterable[Click], Iterable[Register]))] = Array((81da510acc4111e387f3600308919594,
+												(CompactBuffer(Click(81da510acc4111e387f3600308919594,2014-03-06,61)),
+												CompactBuffer(Register(81da510acc4111e387f3600308919594,2014-03-04,2,33.8570099635,-117.855744398)))),
+																(15dfb8e6cc4111e3a5bb600308919594,
+												(CompactBuffer(Click(15dfb8e6cc4111e3a5bb600308919594,2014-03-04,11)),
+												 CompactBuffer(Register(15dfb8e6cc4111e3a5bb600308919594,2014-03-02,1,33.6599436237,-117.958125229)))))
+
+``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````											
+scala> clicks.toDebugString
+res32: String = 
+(1) MapPartitionsRDD[43] at map at 
+ |  MapPartitionsRDD[42] at map at 
+ |  MapPartitionsRDD[41] at textFile 
+ |  hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_2/join/clk.tsv HadoopRDD[40] at textFile 
+
+scala> register.toDebugString
+res33: String = 
+(1) MapPartitionsRDD[39] at map 
+ |  MapPartitionsRDD[38] at map 
+ |  MapPartitionsRDD[37] at map 
+ |  MapPartitionsRDD[36] at textFile 
+ |  hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_2/join/reg.tsv HadoopRDD[35] at textFile 
+
+scala> cogroup.toDebugString
+res34: String = 
+(1) MapPartitionsRDD[48] at cogroup at <console>:29 []
+ |  CoGroupedRDD[47] at cogroup at <console>:29 []
+ +-(1) MapPartitionsRDD[43] at map at <console>:23 []
+ |  |  MapPartitionsRDD[42] at map at <console>:23 []
+ |  |  MapPartitionsRDD[41] at textFile at <console>:23 []
+ |  |  hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_2/join/clk.tsv HadoopRDD[40] at textFile at <console>:23 []
+ +-(1) MapPartitionsRDD[39] at map at <console>:23 []
+    |  MapPartitionsRDD[38] at map at <console>:23 []
+    |  MapPartitionsRDD[37] at map at <console>:23 []
+    |  MapPartitionsRDD[36] at textFile at <console>:23 []
+    |  hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_2/join/reg.tsv HadoopRDD[35] at textFile at <console>:23 []
+
+scala> joined.toDebugString
+res35: String = 
+(1) MapPartitionsRDD[46] at join at <console>:29 []
+ |  MapPartitionsRDD[45] at join at <console>:29 []
+ |  CoGroupedRDD[44] at join at <console>:29 []
+ +-(1) MapPartitionsRDD[43] at map at <console>:23 []
+ |  |  MapPartitionsRDD[42] at map at <console>:23 []
+ |  |  MapPartitionsRDD[41] at textFile at <console>:23 []
+ |  |  hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_2/join/clk.tsv HadoopRDD[40] at textFile at <console>:23 []
+ +-(1) MapPartitionsRDD[39] at map at <console>:23 []
+    |  MapPartitionsRDD[38] at map at <console>:23 []
+    |  MapPartitionsRDD[37] at map at <console>:23 []
+    |  MapPartitionsRDD[36] at textFile at <console>:23 []
+    |  hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_2/join/reg.tsv HadoopRDD[35] at textFile at <con...
+
+
+#############################################################################################################################################
+scala>val data = sc.textFile("hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_3/users.dat")
+scala>data.first
+	res0: String = 1::F::1::10::48067
+
+scala> case class Users(id: Long, gender: String, age: Int, occupation:String, zipcode: String)
+scala> val users = data.map(_.split("::")).map(col => Users(col(0).toLong, col(1),col(2).toInt,col(3),col(4)))
+	users: org.apache.spark.rdd.RDD[Users] = MapPartitionsRDD[3] at map at <console>:25
+
+scala> users.take(2)
+	res3: Array[Users] = Array(Users(1,F,1,10,48067), Users(2,M,56,16,70072))
+``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+public class Main {
+	public static void main(String[] args) {
+		SparkConf conf = new SparkConf();
+				conf.setMaster("local");    
+				conf.setAppName("My App");
+		JavaSparkContext sc = new JavaSparkContext(conf);
+		
+		conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+		conf.set("spark.kryo.registrationRequired", "true");
+		conf.registerKryoClasses(new Class[] {Object[].class,User.class});
+		conf.set("spark.kryoserializer.buffer.mb","24");
+		
+		String prefix="001"
+
+		// Load our input data.
+		JavaRDD<String> data = sc.textFile("/users.dat");
+		JavaRDD<String> users = data.map(line -> Arrays.asList(line.split("::")))
+									.map(col -> new User(Long.parseLong(col.get(0)),
+														col.get(1),
+														Interger.parseInt(col.get(2)),
+												prefix + col.get(3),
+														col.get(4))
+										);
+		
+		sysout(users.first());	o/p :org.apache.spark.User@5fgvf4
+	}}
+```````````````````````````````````````````````````````````````````````````````````````````````````````````
+public class User implements Serialization{
+	public long id;
+	public String gender;
+	public int age;
+	public String occupation;
+	public String zipCode;
+	
+	public User(long id,String gender,...)
+	{this.id =id ; this gender = gender;}
+	
+###################################### BroadCast #################################################################################
+scala> val data =sc.parallelize( 1 to 3)
+	data: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[5] at parallelize at <console>:21
+
+scala> data.map(_*2).collect
+	res5: Array[Int] = Array(2, 4, 6)
+	
+scala> data.map(parameter => parameter*2).collect
+``````````````````````````````````````````````````````````````````````````````````
+val MUL_FACTOR = 2
+data.map(parameter => parameter*MUL_FACTOR).collect
+	res9: Array[Int] = Array(2, 4, 6)
+```````````````````````````````````````````````````
+scala> val factor = sc.broadcast(MUL_FACTOR)
+		factor: org.apache.spark.broadcast.Broadcast[Int] = Broadcast(9)
+
+scala> factor
+	res10: org.apache.spark.broadcast.Broadcast[Int] = Broadcast(9)
+	
+scala> factor.value
+	res11: Int = 2
+
+scala> data.map(parameter => parameter*factor.value).collect
+	res12: Array[Int] = Array(2, 4, 6)
+
+scala> data.map({parameter => factor.value=0 ; parameter*factor.value})
+		error: value value_= is not a member of org.apache.spark.broadcast.Broadcast[Int]
+              data.map({parameter => factor.value=0 ; parameter*factor.value})
+
+#################################### Accumulators ######################################################################################
+scala> val data =sc.parallelize( 1 to 3)
+	data: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[5] at parallelize at <console>:21
+
+scala>val double = data.map(_*2).collect
+	double: Array[Int] = Array(2, 4, 6)
+	
+scala> val ac = sc.accumulator(0)
+	ac: org.apache.spark.Accumulator[Int] = 0
+	
+scala> ac.value
+	res14: Int = 0
+
+scala> ac+=1
+scala> ac.value
+	res16: Int = 1
+scala> ac
+	res17: org.apache.spark.Accumulator[Int] = 1
+
+scala> double.foreach(ac += _)
+scala> ac.value
+	res19: Int = 13        1+(2+4+6)
+
+scala> double.foreach(value => ac.add(value))
+scala> ac.value
+	res21: Int = 25       13+12
+
+``````````````````````````````````````````pyspark`````````````````````````````````````````````````````
+>>> data = sc.parallelize( list(range(1,3)))
+			 .map(lambda x: x*2)
+	[o/p: 2,4]   																					 if x**2 => o/p: [1,4]
+	
+>>> ac = sc.accumulator(0)
+>>> data.foreach(lambda x: ac.add(x))
+>>> ac.value
+6
+`````````````````or define a function```````````````````````````````````````````````````````
+>>> def acummulateMe(x):
+...     ac.add(x)
+... 
+>>> data.foreach(acummulateMe)
+>>> ac.value
+	12
+
+########################### Cache/Persist ##############################################################	
+scala> val data=sc.textFile("hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_4/movielens/large/tags.dat").map(_.split("::"))
+		data: org.apache.spark.rdd.RDD[Array[String]] = MapPartitionsRDD[9] at map
+scala> val movies15 = data.filter(_.contains("15"))
+	movies15: org.apache.spark.rdd.RDD[Array[String]] = MapPartitionsRDD[10] at filter at <console>:23
+
+scala> val output = movies15.collect
+	output: Array[Array[String]] = Array(Array(15, 4973, excellent!, 1215184630),
+										 Array(33384, 15, pirates, 1183419994), 
+										 Array(36784, 15, pirates, 1164498257), 
+										 Array(64363, 15, Pirate, 1139235977))
+```````````````````````````````````````````````````````````````````````````````````````````````````````````
+scala> movies15.cache()--------------------------------------------------here storage is not created
+		res5: movies15.type = MapPartitionsRDD[10] at filter 
+
+scala> movies15.toDebugString
+	res6: String = 
+	(1) MapPartitionsRDD[10] at filter at <console>:23 [Memory Deserialized 1x Replicated]
+	|  MapPartitionsRDD[9] at map at <console>:21 [Memory Deserialized 1x Replicated]
+	|  MapPartitionsRDD[8] at textFile at <console>:21 [Memory Deserialized 1x Replicated]
+	|  hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_4/movielens/large/tags.dat HadoopRDD[7] at textFile [Memory Deserialized 1x Replicated]
+
+scala> data.toDebugString
+	res7: String = 
+	(1) MapPartitionsRDD[9] at map at <console>:21 []
+	|  MapPartitionsRDD[8] at textFile at <console>:21 []
+	|  hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_4/movielens/large/tags.dat HadoopRDD[7] at textFile 
+
+scala> val output = movies15.collect------------------------------here storage is created
+		RDD_Name			Storage_Level						Cached_Partitions	
+		MapPartitionsRDD 	Memory Deserialized 1x Replicated 	1 	
+		Fraction_Cached		Size_in_Memory						Size_in_ExternalBlockStore	Size_on_Disk
+		100% 				1056.0 B 							0.0 B 						0.0 B
+````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+scala> import org.apache.spark.storage.StorageLevel
+		import org.apache.spark.storage.StorageLevel
+
+scala> movies15.persist(StorageLevel.MEMORY_AND_DISK)
+		java.lang.UnsupportedOperationException: Cannot change storage level of an RDD after it was already assigned a level
+
+//need to redefine the RDD
+scala> val movies15 = data.filter(_.contains("15"))
+	movies15: org.apache.spark.rdd.RDD[Array[String]] = MapPartitionsRDD[11] at filter at <console>:24
+
+scala> movies15.toDebugString
+	res10: String = 
+	(1) MapPartitionsRDD[11] at filter at <console>:24 []
+	|  MapPartitionsRDD[9] at map at <console>:21 []
+	|  MapPartitionsRDD[8] at textFile at <console>:21 []
+	|  hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_4/movielens/large/tags.dat HadoopRDD[7] at textFile at <console>:21 []
+
+scala>  movies15.persist(StorageLevel.MEMORY_AND_DISK)
+res11: movies15.type = MapPartitionsRDD[11] at filter at <console>:24
+
+scala> movies15.toDebugString
+	res12: String = 
+	(1) MapPartitionsRDD[11] at filter at <console>:24 [Disk Memory Deserialized 1x Replicated]
+	|  MapPartitionsRDD[9] at map at <console>:21 [Disk Memory Deserialized 1x Replicated]
+	|  MapPartitionsRDD[8] at textFile at <console>:21 [Disk Memory Deserialized 1x Replicated]
+	|  hdfs://quickstart.cloudera:8020/raam/Working_Files/Chapter_4/movielens/large/tags.dat HadoopRDD[7] at textFile at [Disk Memory Deserialized 1x Replicated]
+
+scala> movies15.count()------------------------------here storage is created
+	res13: Long = 4
+
+scala> movies15.collect()------------------------------here storage NOT is created again
+res14: Array[Array[String]] = Array(Array(15, 4973, excellent!, 1215184630), Array(33384, 15, pirates, 1183419994), Array(36784, 15, pirates, 1164498257), Array(64363, 15, Pirate, 1139235977))
+
+```````````````````````````````````````````````````````````````````````````````````````````
+Disk_only_2
+Memory_and_disk_ser_2
+memory_only_ser_2
+Memory_and_disk_2
+memory_only_2
+NONE
+OFF_HEAP
+####################################################################################################################################################
+
+
+
+
+
+
+
+workouts:
+val rawdata: List[String] = List("raam,27,ctr", "ravi,04,fgg", "rani,01,fkk")
+val rawRDD = sc.parallelize(rawdata,10)
+case class Schema(name:String,id: Int,city:String)
+val rows = rawRDD.map(line => line.split(",")).map(columns => Schema(columns(0),columns(1).toInt,columns(2)))
+val allmap = rows.map(r => (r.id, r))
+allmap.sortBy({ case (id,schema) => id},ascending = false).first()

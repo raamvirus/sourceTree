@@ -1,0 +1,68 @@
+wget http://www.scala-lang.org/files/archive/scala-2.11.7.tgz
+tar xvf scala-2.11.7.tgz
+sudo mv scala-2.11.7 /usr/lib
+soft link;;;;;sudo ln -s /usr/lib/scala-2.11.7 /usr/lib/scala
+go to ~ then ;;;;;sudo gedit .bashrc
+	export SCALA_HOME=/usr/lib/scala
+	export PATH=$PATH:$SCALA_HOME/bin
+source .bashrc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+scala> var v:Int=10;
+v: Int = 10
+
+scala> v
+res0: Int = 10
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+scala> def m(x:Int):Int=2*x;
+m: (x: Int)Int
+
+scala> val v= m(2);
+v: Int = 4
+
+scala> m(2);
+res4: Int = 4
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+scala> def printing_procedure(a:Int) {println("hello.."+a);}
+printing_procedure: Unit
+
+scala> printing_procedure(8)
+
+hello..8
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+scala> val f =(x:Int)=> 2*x;
+f: Int => Int = <function1>
+
+scala> val one = f(2);
+one: Int = 4
+
+scala> f(2)
+res3: Int = 4
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+scala> println("raam")
+raam
+
+scala> :t println("raam")
+Unit
+
+scala> :t  val a:Int =8
+Int
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+http://spark.apache.org/docs/latest/
+
+
+
+
+~~~~~~ convert an array variable to List or Collection~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Create sample string array
+        String[] strArray = {"one", "five", "two", "three"};
+        List<String> strList = Arrays.asList(strArray);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+toList() returns a Collector that accumulates the input elements into a new List.
+	Stream<String> s = Stream.of("a","b","c");
+    List<String> names = s.collect(Collectors.toList());
+	o/p :[a,b,c]
+
+	

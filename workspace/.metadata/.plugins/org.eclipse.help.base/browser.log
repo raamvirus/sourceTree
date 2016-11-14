@@ -1,0 +1,5 @@
+
+Jun 23, 2015 16:23:05.08 NEW SESSION
+Jun 23, 2015 16:23:05.08 which: no mozilla in (/opt/tomcat/bin:/usr/lib/qt-3.3/bin:/opt/maven/bin:/opt/ant/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/lib/jvm/jdk1.7.0_67/bin:/usr/lib/hadoop-2.2.0/bin:/home/edureka/spark-1.1.1/bin:/usr/lib/hive-0.13.1-bin/bin:/home/edureka/bin)
+Jun 23, 2015 16:23:05.08 which: no netscape in (/opt/tomcat/bin:/usr/lib/qt-3.3/bin:/opt/maven/bin:/opt/ant/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/lib/jvm/jdk1.7.0_67/bin:/usr/lib/hadoop-2.2.0/bin:/home/edureka/spark-1.1.1/bin:/usr/lib/hive-0.13.1-bin/bin:/home/edureka/bin)
+Jun 23, 2015 16:23:05.09 /usr/bin/firefox

@@ -1,0 +1,44 @@
+Module-5 :
+
+sbt package ----> give only a jar file
+sbt eclipse ----> give all src code,libs,jar. So that we can import it to eclipse
+---------------------------------------------------------------------------------------------
+[conf]$ cat spark-defaults.conf.template 
+
+# spark.eventLog.enabled           true
+# spark.eventLog.dir               hdfs://namenode:8021/directory
+
+so that the errors can be seen from anywhere(not possible is its configured to local NFS)
+---------------------------------------------------------------------------------------------
+https://spark-packages.org/ - we can connect to mongo db etc
+--------------------------------------------------------------------------------------------
+Slide-96:
+File1 - is split into B1 , B2 blocks . 
+		B1 is in S1,S4,S(system)5. B2 is in S2,S3,S6
+		
+We have 1 million images in two dir [Normal Image ,Issue Image] .So the meta data for this 1 million files will be huge to fit into Memory.
+Ans : Sequence File (Slide-97) Key – value (Filename1 – byte array)
+----------------------------------------------------------------------------------------------------------
+Class-9:
+Slide-105 : how to import code to eclipse
+----
+Slide-114:
+Joining two different files(yellow file has 3 blocks & purple file has 2 blocks)
+Problem : First carteasin product will happen in the network & it will bring down the network.
+Solution : Partition the Larger dataset by state/city/id etc
+--
+case class demo (slide-48)
+Scala_M1_M2.zip\NModule2\src\Ex1CaseDemo
+-------------------------------------------------------------------------------------------------------------------
+Disable the warnings:
+
+log4j.properties
+	log4j.rootCategory=INFO, console----------------->change it to log4j.rootCategory=ERROR, console
+	
+spark-submit 
+--class sparky.MyApp --master spark://my.host.com:7077 
+--conf "spark.executor.extraJavaOptions=-Dlog4j.configuration=file:/apps/spark-1.2.0/conf/log4j-executor.properties" myapp.jar	
+
+-------------------------------------------------------------------------------------------------------------------------
+--conf "spark.executor.extraJavaOptions=-Dlog4j.configuration=file:/home/edureka/spark-1.5.2/conf/raam_log4j.properties"
+

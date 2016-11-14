@@ -1,0 +1,40 @@
+/*apply schema to a specific RDD */
+package com.spark.pkg
+
+import org.apache.spark.SparkContext
+import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.api.java._
+
+
+object SQLMain2 extends App{
+  val rdd : RDD[Row] = sc.parallelize(List(("raam",32),("Me",1)))
+      .map {case(name,count) => Row(name,count) }
+
+val schema = StructType(List(
+      StructFiled("name",StringType,nullable=false),
+      StructFiled("value",IntegerType,false)
+      ))
+val df = sqlContext.createDataFrame(rdd,schema)
+df.printSchema()
+//--------------------------------------------------------------//
+df.registerTempTable("authors")
+val authorDF = sqlContext.sql(
+  """
+     |SELECT * FROM authors WHERE value >0
+  """.stripMargin)
+authorsDF.show()
+//--------------------------------------------------------------//
+}
+
+
+
+root
+ |-- name: string (nullable = false)
+ |-- nbBooks: integer (nullable = false)
+
+
+name  value
+raam  32
+Me  1
+
+*/

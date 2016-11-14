@@ -1,0 +1,22 @@
+/*save and load */
+package com.spark.pkg
+
+import org.apache.spark.SparkContext;
+import org.apache.spark.sql.SQLContext;
+import org.apache.spark.sql.api.java.JavaSQLContext;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.types.{StructType,StructField,StringType};
+import  org.apache.spark.sql.types.IntegerType;
+import org.apache.spark.sql.types._;
+
+
+object SQLMain4 extends App{
+  val sc = new SparkContext("local","app")
+  val sqlContext = new SQLContext(sc)
+  //val path = "//home//edureka//scalaspace//Module0//Working_Files//Chapter_5//data_titanic.json";
+  //val path = "hdfs://localhost:50070/raam/Working_Files/Chapter_5/data_titanic.json"
+  //val df = sqlContext.load(path,"json")
+  df.printSchema()
+
+}
+

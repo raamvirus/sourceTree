@@ -1,0 +1,9 @@
+[0m[[0minfo[0m] [0mPackaging /home/edureka/scalaspace/Module6/Demo/target/scala-2.10/spark-wordcount_2.10-1.0.jar ...[0m
+[0m[[0mdebug[0m] [0mInput file mappings:[0m
+[0m[[0mdebug[0m] [0m	readFile$$anonfun$1.class[0m
+[0m[[0mdebug[0m] [0m	  /home/edureka/scalaspace/Module6/Demo/target/scala-2.10/classes/readFile$$anonfun$1.class[0m
+[0m[[0mdebug[0m] [0m	readFile$.class[0m
+[0m[[0mdebug[0m] [0m	  /home/edureka/scalaspace/Module6/Demo/target/scala-2.10/classes/readFile$.class[0m
+[0m[[0mdebug[0m] [0m	readFile.class[0m
+[0m[[0mdebug[0m] [0m	  /home/edureka/scalaspace/Module6/Demo/target/scala-2.10/classes/readFile.class[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m

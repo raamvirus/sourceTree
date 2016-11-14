@@ -1,0 +1,36 @@
+########################################## HIGHER ORDER FUNCTION ####################################
+Functions that take other functions as parameters or 
+that return functions as results are called "HIGHER ORDER FUNCTIONS"
+
+Ex12.scala
+http://docs.scala-lang.org/overviews/collections/performance-characteristics.html
+slide no 63
+----see examples of for loop in "M2_5LoopFor.scala" & "M2_8LoopYield.scala"
+slide no 64,65------------reduce function
+Ex12b.scala
+Ex12c.scala
+Ex12d.scala
+############################################# ANONYMOUS FUNCTIONS ###############################################
+Instead of
+	defstr= ”abc”; println(str)
+We can directly write
+	println(”abc”)
+Note : not prefered 
+#######################################################################################################################	
+Closure -----------> run as ------------> scala application
+########################################################################################################################
+
+##################################### LAMBDA ARCHITECTURE ###############################################################
+three layers (https://www.mapr.com/developercentral/lambda-architecture )
+
+1.BATCH LAYER (report generation) - map-reduce paradigm is used of batch processing (here we are using spark functional programming for MR)
+2.SPEED LAYER (credit card abnormal sms alert)-needs to be processed immediately with in milliseconds of time.(Strom , Kafka)
+3.SERVICING LAYER - bring the data from speed layer & batch layer & analyse how many times detected the fraud (or) 
+					Any service need to expose through API
+
+Slide-67--
+the model generated in Batch layer will be used in Speed Layer
+this model is an mathematical function & the result will be fast in milliseconds					
+
+#########################################################################################################
+spark-packages.org

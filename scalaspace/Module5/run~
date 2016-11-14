@@ -1,0 +1,3 @@
+val rdd1 = sc.textFile("readFile.txt")
+val rdd2 = rdd1.filter(line => line.contains("Spark"))
+val rdd3 = rdd2.count()

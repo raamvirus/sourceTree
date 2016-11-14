@@ -1,0 +1,222 @@
+2015-06-23 16:17:21,405  WARN [ModalContext] - ScalaProject - Project test has platform default sourceLevel.
+2015-06-23 16:17:21,415  WARN [ModalContext] - ScalaProject - Project test runs on platform default installation.
+2015-06-23 16:17:30,692  WARN [main] - ScalaProject - Project test has platform default sourceLevel.
+2015-06-23 16:17:30,692  WARN [main] - ScalaProject - Project test runs on platform default installation.
+2015-06-23 16:17:52,284  WARN [Worker-1] - ScalaProject - Project test has platform default sourceLevel.
+2015-06-23 16:17:52,285  WARN [Worker-1] - ScalaProject - Project test runs on platform default installation.
+2015-06-23 16:18:12,486  WARN [Worker-1] - ScalaProject - Project test has platform default sourceLevel.
+2015-06-23 16:18:12,486  WARN [Worker-1] - ScalaProject - Project test runs on platform default installation.
+2015-06-23 16:18:12,511  WARN [Worker-1] - ScalaProject - Project test has platform default sourceLevel.
+2015-06-23 16:18:12,512  WARN [Worker-1] - ScalaProject - Project test runs on platform default installation.
+2015-06-23 16:22:22,567 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2015-06-23 16:22:22,568 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2015-06-23 16:22:22,568 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-01-18 16:52:19,302  WARN [Worker-0] - ScalaProject - Project test has platform default sourceLevel.
+2016-01-18 16:52:19,315  WARN [Worker-0] - ScalaProject - Project test runs on platform default installation.
+2016-01-18 16:52:21,642  WARN [Worker-1] - ScalaProject - Project test has platform default sourceLevel.
+2016-01-18 16:52:21,642  WARN [Worker-1] - ScalaProject - Project test runs on platform default installation.
+2016-01-18 17:01:48,424 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-01-18 17:01:48,425 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-01-18 17:01:48,425 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-01-18 17:03:09,246  WARN [Worker-6] - ScalaProject - Project test has platform default sourceLevel.
+2016-01-18 17:03:09,247  WARN [Worker-6] - ScalaProject - Project test runs on platform default installation.
+2016-01-18 17:47:47,331  WARN [ModalContext] - ScalaProject - Project Movie Recommendation New has platform default sourceLevel.
+2016-01-18 17:47:47,331  WARN [ModalContext] - ScalaProject - Project Movie Recommendation New runs on platform default installation.
+2016-01-18 17:47:47,332  WARN [ModalContext] - ScalaProject - Project Movie Recommendation New has platform default sourceLevel.
+2016-01-18 17:47:47,332  WARN [ModalContext] - ScalaProject - Project Movie Recommendation New runs on platform default installation.
+2016-01-18 17:47:52,412  WARN [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - Preference scala.compiler.sourceLevel was uninitialized for Movie Recommendation New, setting default to 2.11.
+2016-02-29 10:27:10,247  WARN [Worker-4] - ScalaProject - Project sample has platform default sourceLevel.
+2016-02-29 10:27:10,264  WARN [Worker-4] - ScalaProject - Project sample runs on platform default installation.
+2016-02-29 10:27:20,586 ERROR [main] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-02-29 10:27:20,595 ERROR [main] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-02-29 10:27:20,601 ERROR [main] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-02-29 10:27:21,543  WARN [Worker-5] - ScalaProject - Project sample has platform default sourceLevel.
+2016-02-29 10:27:21,546  WARN [Worker-5] - ScalaProject - Project sample runs on platform default installation.
+2016-02-29 10:27:22,322 ERROR [main] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-02-29 10:27:22,322 ERROR [main] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-02-29 10:27:22,437 ERROR [main] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-02-29 10:27:46,187 ERROR [main] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-02-29 10:27:46,187 ERROR [main] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-02-29 10:27:46,373  WARN [Worker-0] - ScalaProject - Project sample has platform default sourceLevel.
+2016-02-29 10:27:46,374  WARN [Worker-0] - ScalaProject - Project sample runs on platform default installation.
+2016-02-29 10:27:52,629 ERROR [main] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-02-29 10:27:52,630 ERROR [main] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-02-29 10:27:52,770  WARN [Worker-5] - ScalaProject - Project sample has platform default sourceLevel.
+2016-02-29 10:27:52,770  WARN [Worker-5] - ScalaProject - Project sample runs on platform default installation.
+2016-02-29 10:28:11,260  WARN [Worker-4] - ScalaProject - Project sample has platform default sourceLevel.
+2016-02-29 10:28:11,261  WARN [Worker-4] - ScalaProject - Project sample runs on platform default installation.
+2016-03-01 23:10:31,251  WARN [Worker-10] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:10:31,251  WARN [Worker-10] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:14:29,169  WARN [Worker-8] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:14:29,172  WARN [Worker-8] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:15:03,297  WARN [Worker-12] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:15:03,298  WARN [Worker-12] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:15:11,764  WARN [Worker-12] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:15:11,765  WARN [Worker-12] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:15:27,609  WARN [Worker-8] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:15:27,609  WARN [Worker-8] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:15:58,318  WARN [Worker-14] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:15:58,318  WARN [Worker-14] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:16:36,660  WARN [Worker-15] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:16:36,660  WARN [Worker-15] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:19:54,790  WARN [Worker-16] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:19:54,791  WARN [Worker-16] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:24:30,644  WARN [main] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:24:30,646  WARN [main] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:24:35,264  WARN [main] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-01 23:24:35,264  WARN [main] - ScalaProject - Project sample runs on platform default installation.
+2016-03-01 23:32:49,312  WARN [main] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:32:49,313  WARN [main] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:32:52,906  WARN [main] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-01 23:32:52,906  WARN [main] - ScalaProject - Project sample runs on platform default installation.
+2016-03-01 23:49:21,302  WARN [main] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-01 23:49:21,324  WARN [main] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-01 23:49:26,020  WARN [main] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-01 23:49:26,020  WARN [main] - ScalaProject - Project sample runs on platform default installation.
+2016-03-01 23:52:27,375 ERROR [Text Viewer Hover Presenter] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-03-01 23:52:27,382 ERROR [Text Viewer Hover Presenter] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-03-01 23:52:27,385 ERROR [Text Viewer Hover Presenter] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-03-01 23:52:58,470  WARN [Worker-4] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-01 23:52:58,473  WARN [Worker-4] - ScalaProject - Project sample runs on platform default installation.
+2016-03-02 00:01:01,248  WARN [main] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-02 00:01:01,249  WARN [main] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-02 00:01:08,549  WARN [main] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-02 00:01:08,549  WARN [main] - ScalaProject - Project sample runs on platform default installation.
+2016-03-03 09:32:35,023  WARN [ModalContext] - ScalaProject - Project myProject has platform default sourceLevel.
+2016-03-03 09:32:35,023  WARN [ModalContext] - ScalaProject - Project myProject runs on platform default installation.
+2016-03-03 09:32:36,513 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:33:56,517  WARN [Worker-21] - ScalaProject - Project my has platform default sourceLevel.
+2016-03-03 09:33:56,517  WARN [Worker-21] - ScalaProject - Project my runs on platform default installation.
+2016-03-03 09:34:23,852 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:24,001 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:29,754 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:29,756 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:29,757 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:29,760 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:30,028 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:30,098 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:30,166 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:30,234 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:30,304 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:30,373 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:31,505 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:31,574 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:31,646 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:31,716 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:31,782 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:35,381 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:35,446 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:35,521 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:35,625 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:35,690 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:37,830 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:37,830 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:43,437 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:43,437 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-03 09:34:47,395 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-08 09:01:17,017  WARN [main] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-08 09:01:17,019  WARN [main] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-08 09:01:20,904  WARN [main] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-08 09:01:20,905  WARN [main] - ScalaProject - Project sample runs on platform default installation.
+2016-03-08 09:01:29,462 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - scala.reflect.internal.MissingRequirementError: object scala in compiler mirror not found.
+2016-03-08 09:08:17,483 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-03-08 09:08:17,484 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-03-08 09:08:17,484 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-03-08 09:16:27,100  WARN [main] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-08 09:16:27,101  WARN [main] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-08 09:16:31,493  WARN [main] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-08 09:16:31,493  WARN [main] - ScalaProject - Project sample runs on platform default installation.
+2016-03-08 09:44:57,514 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-03-08 09:44:57,514 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-03-08 09:44:57,514 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-03-08 09:47:00,956  WARN [Worker-7] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-08 09:47:00,957  WARN [Worker-7] - ScalaProject - Project sample runs on platform default installation.
+2016-03-10 23:44:02,243  WARN [main] - ScalaProject - Project SparkProject has platform default sourceLevel.
+2016-03-10 23:44:02,243  WARN [main] - ScalaProject - Project SparkProject runs on platform default installation.
+2016-03-10 23:44:02,693  WARN [Worker-12] - ScalaProject - Project SparkProject has platform default sourceLevel.
+2016-03-10 23:44:02,694  WARN [Worker-12] - ScalaProject - Project SparkProject runs on platform default installation.
+2016-03-10 23:47:37,077  WARN [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - Preference scala.compiler.sourceLevel was uninitialized for SparkProject, setting default to 2.11.
+2016-03-13 00:16:29,352  WARN [Worker-1] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-13 00:16:29,749  WARN [Worker-1] - ScalaProject - Project sample runs on platform default installation.
+2016-03-13 00:16:29,756  WARN [Worker-1] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-13 00:16:29,760  WARN [Worker-1] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-13 00:16:46,589  WARN [Worker-5] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-13 00:16:46,590  WARN [Worker-5] - ScalaProject - Project sample runs on platform default installation.
+2016-03-13 00:27:14,632  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
+2016-03-13 00:27:16,461 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - Throwable during asyncExec
+scala.tools.nsc.interactive.FreshRunReq
+2016-03-13 00:27:16,474 ERROR [main] - org.scala-ide.sdt.core - org.scala-ide.sdt.core - org.scala-ide.sdt.core - 0 - Incorrectly logged ControlThrowable: FreshRunReq(null)
+scala.tools.nsc.interactive.FreshRunReq
+2016-03-13 00:27:21,963 ERROR [Text Viewer Hover Presenter] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-03-13 00:27:22,026 ERROR [Text Viewer Hover Presenter] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-03-13 00:27:22,027 ERROR [Text Viewer Hover Presenter] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-03-13 00:27:22,027 ERROR [Text Viewer Hover Presenter] - IScalaPresentationCompiler$ - Ignoring InterruptException
+2016-03-13 01:23:10,605  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
+2016-03-13 01:27:40,290  WARN [main] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-13 01:27:40,291  WARN [main] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-13 01:27:49,521 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-03-13 01:27:49,561 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-03-13 01:27:49,561 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-03-13 01:27:56,324  WARN [main] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-13 01:27:56,325  WARN [main] - ScalaProject - Project sample runs on platform default installation.
+2016-03-14 23:36:01,147 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-03-14 23:36:01,166 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-03-14 23:36:01,166 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-03-14 23:36:22,718  WARN [Worker-0] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-14 23:36:22,722  WARN [Worker-0] - ScalaProject - Project sample runs on platform default installation.
+2016-03-14 23:36:22,729  WARN [Worker-0] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-14 23:36:22,730  WARN [Worker-0] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-15 00:29:49,087 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-03-15 00:29:49,104 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-03-15 00:29:49,105 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-03-15 00:30:01,173  WARN [Worker-5] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-15 00:30:01,174  WARN [Worker-5] - ScalaProject - Project sample runs on platform default installation.
+2016-03-15 00:30:01,177  WARN [Worker-5] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-15 00:30:01,177  WARN [Worker-5] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-15 09:30:24,591  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
+2016-03-15 09:45:48,677 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-03-15 09:45:48,696 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-03-15 09:45:48,696 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-03-15 09:46:05,799  WARN [Worker-0] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-15 09:46:05,800  WARN [Worker-0] - ScalaProject - Project sample runs on platform default installation.
+2016-03-15 09:46:05,807  WARN [Worker-0] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-15 09:46:05,807  WARN [Worker-0] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-16 10:10:36,693 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-03-16 10:10:36,734 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-03-16 10:10:36,734 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-03-16 10:11:07,009  WARN [Worker-5] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-16 10:11:07,011  WARN [Worker-5] - ScalaProject - Project sample runs on platform default installation.
+2016-03-16 10:11:07,017  WARN [Worker-5] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-16 10:11:07,017  WARN [Worker-5] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-17 08:43:04,740 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-03-17 08:43:04,762 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-03-17 08:43:04,762 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-03-17 08:43:14,234  WARN [Worker-2] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-17 08:43:14,235  WARN [Worker-2] - ScalaProject - Project sample runs on platform default installation.
+2016-03-17 08:43:14,243  WARN [Worker-2] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-17 08:43:14,244  WARN [Worker-2] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-17 10:12:02,304  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
+2016-03-17 10:12:02,304  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
+2016-03-17 23:31:02,339  WARN [Worker-0] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-17 23:31:02,349  WARN [Worker-0] - ScalaProject - Project sample runs on platform default installation.
+2016-03-17 23:31:02,357  WARN [Worker-0] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-17 23:31:02,357  WARN [Worker-0] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-17 23:32:02,131  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
+2016-03-17 23:35:22,539  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
+2016-03-17 23:35:27,780  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
+2016-03-17 23:35:34,081  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
+2016-03-17 23:35:46,842  WARN [org.scalaide.ui.internal.reconciliation.ScalaReconciler] - ImplicitHighlightingPresenter - Timeout while waiting for `askLoadedTyped` during semantic highlighting.
+2016-03-18 09:18:20,036 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-03-18 09:18:20,084 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-03-18 09:18:20,084 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-03-18 09:18:49,885  WARN [Worker-1] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-18 09:18:49,885  WARN [Worker-1] - ScalaProject - Project sample runs on platform default installation.
+2016-03-18 09:18:49,892  WARN [Worker-1] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-18 09:18:49,892  WARN [Worker-1] - ScalaProject - Project sparksql runs on platform default installation.
+2016-03-18 09:24:25,737 ERROR [main] - System.err - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+2016-03-18 09:24:25,742 ERROR [main] - System.err - SLF4J: Defaulting to no-operation (NOP) logger implementation
+2016-03-18 09:24:25,742 ERROR [main] - System.err - SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+2016-03-18 09:24:35,317  WARN [Worker-2] - ScalaProject - Project sample has platform default sourceLevel.
+2016-03-18 09:24:35,318  WARN [Worker-2] - ScalaProject - Project sample runs on platform default installation.
+2016-03-18 09:24:35,329  WARN [Worker-2] - ScalaProject - Project sparksql has platform default sourceLevel.
+2016-03-18 09:24:35,329  WARN [Worker-2] - ScalaProject - Project sparksql runs on platform default installation.

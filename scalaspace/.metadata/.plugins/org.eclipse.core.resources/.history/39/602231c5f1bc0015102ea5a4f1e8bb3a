@@ -1,0 +1,14 @@
+
+//function apply takes another function f,value v
+//and applies function
+
+class Decorator(left:String,right: String){
+	def layout[A](x:A)  = left + x.toString() + right
+}
+
+object Main12a extends App {
+	def apply(f: Int => String, v: Int) = f(v)
+	val decforator = new Decorator("[","]")
+	println(apply(decorator.layout,7))
+
+}

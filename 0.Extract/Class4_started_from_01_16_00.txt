@@ -1,0 +1,36 @@
+Learn about case classes & functional Programming
+
+######################################### FUNCTIONAL PROGRAMMING- slide 55 ###############################################
+1.Assign a function to a Variable
+2.Pass a function as an argument to another function---------> HIGHER ORDER FUNCTION
+3.Get function as return type from a function.
+
+slide 58
+NModule2TraitsFP\src\Ex10.scala
+slide 59
+slide 11
+slide 60
+slide 61
+NModule2TraitsFP\src\Ex11.scala
+	  def sum(f: Int=> Int, a: Int, b: Int): Int=   // here "f: Int=> Int" is just a skeleton(signature)
+	  def cube(x: Int): Int= x * x * x              // its the actual function to be passed
+	  println(sum(cube, 1, 100))					// calling sum with another function as argument
+---------------------------------------------------------------------------------------------------------
+//sum is an HIGHER ORDER FUNCTION
+def sum(f: Int=> Int, a: Int, b: Int): Int= if(a > b) 0 else f(a) + sum(f, a + 1, b)     //f(a) is call to function & sum(f) is variable that hold function name 
+def mycustom(x: Int): Int = 4													//def cube(x: Int): Int= x * x * x		
+println(sum(mycustom,1,10)) ===============================================================> o/p : 40
+
+4 + (2,10)
+4 + 4 + (3,10)	  
+------------------------------------------------------------------------------------------------------------
+//Anonymous function---------------replacing the fun name with code body
+def sumCubes(a: Int, b: Int) = sum(x=>x*x*x, a, b)
+eg :println(sum(x=>x*x*x, 1, 2))
+------------------------------------------------------------------------------------------------------------
+//Ex11a.scala
+
+println(sum((x:Int) => x*2 , 1,3))
+//short way of writing a function,if only an fun is going to take 1 arg as input & that arg is used only once
+println(sum(_*2 , 1,3))				
+//that one arg is represented as _ (place holder)

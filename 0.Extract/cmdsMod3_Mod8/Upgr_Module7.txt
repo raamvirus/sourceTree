@@ -1,0 +1,245 @@
+SQL Context :
+
+scala> import org.apache.spark.sql._
+scala> var sqlContext = new SQLContext(sc)
+		or
+scala> val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+
+HiveContext:
+
+scala> import org.apache.spark.sql.hive._
+scala> val hc = new HiveContext(sc)
+		or
+scala> val hiveContext = new org.apache.spark.sql.hive.HiveContext(sc)
+
+
+
+Dataframe
+
+val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+
+val df = sqlContext.read.json("file:///home/edureka/spark-1.5.2/examples/src/main/resources/people.json")
+
+df.show()
+
+val people = sc.textFile("file:///home/edureka/spark-1.5.2/examples/src/main/resources/people.txt").toDF
+
+people.show()
+
+JSON Dataset
+
+val employee = sqlContext.read.json("file:///home/edureka/edudata/employee.json")   
+//Creating shemaRDD
+
+employee.printSchema()
+
+employee.registerTempTable("employee")
+
+val emp_data = sqlContext.sql("SELECT name, address.city, address.state FROM employee")
+
+emp_data.collect.foreach(println)
+
+val state = sqlContext.sql("SELECT name, address.city FROM employee WHERE address.state= 'California' ")
+
+state.collect.foreach(println)
+
+
+Parquet Dataset
+
+employee.saveAsParquetFile("file:///home/edureka/05mar/edudata/store/emp.parquet")
+
+val parFile = sqlContext.parquetFile("file:///home/edureka/05mar/edudata/store/emp.parquet")
+
+parFile.printSchema()
+
+parFile.registerTempTable("parFile")
+
+val par_state = sqlContext.sql("SELECT name, address.city FROM parFile WHERE address.state= 'California' ")
+
+par_state.collect.foreach(println)
+
+par_state.saveAsParquetFile("hdfs://localhost:8020/Parquet_output")
+
+
+SparkSQL and HIVE Integration
+
+Spark Shell: (Directly execute as sqlcontext is available)
+
+sqlContext.sql("CREATE TABLE IF NOT EXISTS customer_05mar (key INT, value STRING) row format delimited fields terminated by ',' ")
+
+sqlContext.sql("LOAD DATA LOCAL INPATH 'file:///home/edureka/edudata/customers.txt' INTO TABLE customer_05mar")
+sqlContext.sql("LOAD DATA LOCAL INPATH 'file:///home/edureka/edudata/customers_err.txt' INTO TABLE customer_05mar")
+
+
+sqlContext.sql("select * from customer_05mar")
+
+
+Hive shell:
+
+show tables;
+
+select * from customer_05mar;
+
+
+GraphX
+
+import org.apache.spark.graphx._
+import org.apache.spark.rdd.RDD
+
+val vertexArray = Array(
+  (1L, ("Alice", 28)),
+  (2L, ("Bob", 27)),
+  (3L, ("Charlie", 65)),
+  (4L, ("David", 42)),
+  (5L, ("Ed", 55)),
+  (6L, ("Fran", 50))
+  )
+val edgeArray = Array(
+  Edge(2L, 1L, 7),
+  Edge(2L, 4L, 2),
+  Edge(3L, 2L, 4),
+  Edge(3L, 6L, 3),
+  Edge(4L, 1L, 1),
+  Edge(5L, 2L, 2),
+  Edge(5L, 3L, 8),
+  Edge(5L, 6L, 3)
+  )
+
+
+val vertexRDD: RDD[(Long, (String, Int))] = sc.parallelize(vertexArray)
+val edgeRDD: RDD[Edge[Int]] = sc.parallelize(edgeArray)
+
+
+val graph: Graph[(String, Int), Int] = Graph(vertexRDD, edgeRDD)
+
+
+graph.vertices.filter { case (id, (name, age)) => age > 30 }.collect.foreach {
+  case (id, (name, age)) => println(s"$name is $age")}
+
+//String interpolation http://docs.scala-lang.org/overviews/core/string-interpolation.html
+
+for (triplet <- graph.triplets.filter(t => t.attr > 5).collect) {
+  println(s"${triplet.srcAttr._1} loves ${triplet.dstAttr._1}")
+}
+
+for (triplet <- graph.triplets.filter(t => t.attr > 5).collect) {
+  println(s"${triplet.srcAttr._1} loves ${triplet.dstAttr._1} with value ${triplet.attr}")
+}
+
+
+
+Triangle Count
+
+./bin/run-example org.apache.spark.examples.graphx.Analytics triangles file:///home/edureka/spark-1.5.2/graphx/data/followers.txt --numEPart=2
+
+PageRank
+
+./bin/run-example org.apache.spark.examples.graphx.Analytics pagerank file:///home/edureka/spark-1.5.2/graphx/data/followers.txt --numEPart=2
+
+
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Broadcast variables
+
+./bin/spark-shell
+
+
+
+input files - pages.txt and visits_duration.txt
+
+/home/edureka/edudata/pages.txt
+/home/edureka/edudata/visits_duration.txt
+
+//defining class
+case class Urls (url_id: Int, url_name: String)
+case class Vists(visit_id: Int, url_id: Int, duration: Int)
+
+
+// Load RDD of (id, url) pairs 
+val urlnames = sc.textFile("file:///home/edureka/edudata/pages.txt").map(_.split(" ")) 
+urlnames.collect
+val urlnames_recs = urlnames.map( r => (r(0).toInt, Urls(r(0).toInt,r(1))))
+urlnames_recs.collect
+
+
+// Load RDD of (URL, visit) pairs 
+val visit_duration = sc.textFile("file:///home/edureka/edudata/visits_duration.txt").map(_.split(" "))
+val visit_duration_recs = visit_duration.map( r => (r(1).toInt, Vists(r(0).toInt, r(1).toInt, r(2).toInt)))
+
+
+val joined = urlnames_recs.join(visit_duration_recs)
+joined.collect
+
+val joined_rev = visit_duration_recs.join(urlnames_recs)
+
+joined_rev.collect
+
+//Here sorting and shuffling happens over the network Ref Image
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//alternative is to send the map to each executor along with the task.
+
+
+val urlnames_recs_map = urlnames_recs.collect.toMap
+//toMap - array to map conversion
+
+urlnames_recs_map(1)
+
+val altjoined = visit_duration_recs.map(v =>(v._1,(urlnames_recs_map(v._1),v._2)))
+
+altjoined.collect
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+//More optimized way is to use Broadcast variable.
+// bc will get copied to each executor.
+
+val mybc = sc.broadcast(urlnames_recs_map)
+
+val bcjoined = visit_duration_recs.map(v =>(v._1,(mybc.value(v._1),v._2)))
+
+bcjoined.collect
+
+
+
+val joined_rev = visit_duration_recs.join(urlnames_recs)
+val altjoined = visit_duration_recs.map(v =>(v._1,(urlnames_recs_map(v._1),v._2)))
+
+val bcjoined = visit_duration_recs.map(v =>(v._1,(mybc.value(v._1),v._2)))
+
+
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Accumulator
+~~~~~~~~~~~
+normal way
+
+
+val myrangeacc = sc.parallelize(1 to 1000000, 5)
+val myrangecount = myrangeacc.count
+val mysum = myrangeacc.reduce(_+_)
+val myaverage = mysum/myrangecount
+
+~~~~~~~~~~~
+
+//with accumulator
+
+val sumacc = sc.accumulator(0) 
+val mycount = sc.accumulator(0) 
+myrangeacc.foreach(r => { 
+ sumacc += r
+ mycount += 1 
+}) 
+
+val myaverageacc = sumacc.value / mycount.value
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+

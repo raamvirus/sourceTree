@@ -1,0 +1,26 @@
+//Sum is now a higher order function.
+//Its first parameter is a fun which takes i/p as parm & returns Int
+//----------------------------------------------------------------------------//
+object Main11 extends App{	
+//----------------------------------------------------------------------------//
+  def sum(f: Int=> Int, a: Int, b: Int): Int=
+			if(a > b) 0
+			else f(a) + sum(f, a + 1, b)
+//----------------------------------------------------------------------------//			
+	def cube(x: Int): Int= x * x * x
+//----------------------------------------------------------------------------//
+	def sumCubes(a: Int, b: Int) = sum(cube, a, b)
+	//def sumCubes(a:Int, b:Int) = sum(x=>x*x*x, a, b) // Anonymous functions 
+//----------------------------------------------------------------------------//
+	println(sumCubes(3,5))
+	
+  /*
+   * The same example could be re-written as shown below:
+   */
+  
+def sumInts(a: Int, b: Int) = sum(1*_, a, b)
+println(sumInts(3,5)) 
+
+  
+  
+}

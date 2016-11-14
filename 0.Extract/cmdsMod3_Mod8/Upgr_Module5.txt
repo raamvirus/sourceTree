@@ -1,0 +1,334 @@
+In Spark ,Partitions = blocks. 
+Here mappers/reducers, we call it as tasks.We can increase the no.of tasks by specifying the partitions while reading
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Persistance(cache) : do not remove an RDD from memory & store it as a file on Hard Disk or in memory.
+					If we use MEMORY_ONLY_SER : it takes less space but it cost some CPU cycle.
+					
+					With cache(), you use only the default storage level MEMORY_ONLY. 
+					With persist(), you can specify which storage level you want,(rdd-persistence).
+
+val result = sc.parallelize(1 to 10,4)							#4 tasks will be excuted and Cached Partitions =4
+
+result.persist(org.apache.spark.storage.StorageLevel.MEMORY_ONLY)
+//(or)result.cache()
+
+result.count()                               # now only it will be cached
+result.first()
+
+result.unpersist(true)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Persist will not guarantee on one particular machine , Where as Broadcast will guarantee on the machines where processing is happening
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# store as a Sequence files - Key - value pair 
+
+./bin/spark-shell
+
+val save_data = sc.parallelize(List(("Hadoop",3),("Spark",6),("Kafka",2)))			# list of tuples
+
+save_data.saveAsSequenceFile("output_15feb")
+
+save_data.saveAsSequenceFile("hdfs://localhost:8020/user/edureka/output_15feb11")	#hdfs
+save_data.saveAsSequenceFile("file:///home/edureka/15feb/15feb_output")				#local
+
+# reading an sequence file
+
+import org.apache.hadoop.io._                          # import the hadoop datatypes like Text,IntWritable
+
+val data = sc.sequenceFile("file:///home/edureka/15feb/15feb_output",classOf[Text], classOf[IntWritable]).map{case(x,y) =>(x.toString,y.get())}
+val data = sc.sequenceFile("/user/edureka/sample_seq_output",classOf[Text], classOf[IntWritable],5).map{case(x,y) =>(x.toString,y.get())}
+
+#Syntax : sequenceFile(inputPath,keyClass,valueClass,minPartitions)
+
+data.collect
+res3: Array[(String, Int)] = Array((Hadoop,3), (Spark,6), (Kafka,2))
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+count
+countByValue - Returns a map of value to the number of times the value occurs
+countByKey
+distinct
+sample
+union	- merge 2 RDDs. DUPLICATES ARE NOT REMOVED
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#ReduceByKey / flatMap
+
+val file = sc.textFile("file:///home/edureka/spark-1.5.2/README.md")
+val counts1 = file.map(line => line.split(" "))-------------------------------------------------> it gives ARRAY OF ARRAYs .So use FlatMap
+val counts = file.flatMap(line => line.split(" ")).map(word => (word, 1)).reduceByKey(_ + _)
+counts.collect.foreach(println)
+
+HINT : ReduceByKey --> first group by the key , then reduce the values
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#groupByKey  / KeyBy
+~~~~~~~~~~
+val aaa = sc.parallelize(List("kim", "kumar", "muthu", "tim", "lak", "vamsi"))				//parallelizing a list of strings
+
+val foraaakey = aaa.keyBy(_.length)						//keyBy similar to map fun,generate a (key,value) pair, key is the len of string				
+														//o/p:Array[(Int, String)] = Array((3,kim), (5,kumar), (5,muthu), (3,tim), (3,lak), (5,vams))
+val mycounter = foraaakey.map(x => (x._1,1))
+mycounter.collect
+
+
+foraaakey.groupByKey.collect							//CompactBuffer is an list
+						//Array[(Int, Iterable[String])] = Array((3,CompactBuffer(kim, tim, lak)),
+																 (5,CompactBuffer(kumar, muthu,vamsi)))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#join
+
+val a = sc.parallelize(List("kim", "kumar", "muthu", "tim", "lak", "vamsi"))
+val akeyby = a.keyBy(_.length)
+akeyby.collect										//Array[(Int, String)] = Array((3,kim), 
+																					(5,kumar), 
+																					(5,muthu), 
+																					(3,tim), (3,lak), (5,vamsi))
+val b = sc.parallelize(List("English", "Maths","Tamil", "Science"))
+val bkeyby = b.keyBy(_.length)
+bkeyby.collect														//Array[(Int, String)] = Array((7,English), 
+																									(5,Maths), 
+																									(5,Tamil), (7,Science))
+akeyby.join(bkeyby).collect
+// Array[(Int, (String, String))] = Array((5,(kumar,Maths)), 		--->key,tuple
+										  (5,(kumar,Tamil)), 
+										  (5,(muthu,Maths)), 
+										  (5,(muthu,Tamil)), 
+										  (5,(vamsi,Maths)), 
+										  (5,(vamsi,Tamil)))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#cogroup - First Group then Join [ to some extent we can say it as "Outer Join" ] and [Similar to cogroup in PIG]
+
+val a = sc.parallelize(List("kim", "kumar", "muthu", "tim", "lak", "vamsi"))
+val akeyby = a.keyBy(_.length)
+akeyby.collect
+val b = sc.parallelize(List("English", "Maths","Tamil", "Science"))
+val bkeyby = b.keyBy(_.length)
+
+akeyby.cogroup(bkeyby).collect
+//Array[(Int, (Iterable[String], Iterable[String]))] = Array((3,(CompactBuffer(kim, tim, lak),CompactBuffer())), 
+															 (7,(CompactBuffer(),CompactBuffer(English, Science))), 
+															 (5,(CompactBuffer(kumar, muthu, vamsi),CompactBuffer(Maths, Tamil))))
+USECASE:slide-108/109 - a dataset one has claim details for 2015 & dataset two has emailsent for 2015. Need an graph report to know  															 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#cartesian Product
+
+val carta = sc.parallelize(List("kim", "kumar", "muthu", "tim", "lak", "vamsi"))
+val cartb = sc.parallelize(List("English", "Maths","Tamil", "Science"))
+
+carta.cartesian(cartb).collect													-->6*4 =24 combinations
+// Array[(String, String)] = Array((kim,English), (kim,Maths), (kim,Tamil), (kim,Science), (kumar,English), (kumar,Maths), (kumar,Tamil), (kumar,Science), (muthu,English), (muthu,Maths), (muthu,Tamil), (muthu,Science), (tim,English), (tim,Maths), (tim,Tamil), (tim,Science), (lak,English), (lak,Maths), (lak,Tamil), (lak,Science), (vamsi,English), (vamsi,Maths), (vamsi,Tamil), (vamsi,Science))
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#intersection
+
+val setintera = sc.parallelize(1 to 10)
+val setinterb = sc.parallelize(5 to 15)
+
+(setintera intersection setinterb).collect
+//res6: Array[Int] = Array(6, 7, 9, 8, 10, 5)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Coalese [ Input Data[1024 MB] is partitioned into 8 Blocks,After applying filters,the data will be assume 256MB on 8 Partitions. 
+			So Apply coalese to have only two Partitions ]
+
+val acoalesce = sc.parallelize(1 to 15,3)
+acoalesce.cache
+acoalesce.collect
+
+val onepart = acoalesce.coalesce(1)				// creating a new RDD with one partition 
+onepart.cache
+onepart.collect
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Ordered
+
+val aordered = sc.parallelize(List("kim", "kumar", "muthu", "tim", "lak", "vamsi"))
+
+aordered.takeOrdered(4)					// we can pass a customised function as parameter for ordering 
+	// Array[String] = Array(kim, kumar, lak, muthu)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#CollectAsMap				#MAP - key-valyue pair,where keys are unique
+		
+val myrdd = sc.parallelize(Seq((1, "A"), (2, "B"), (2, "D"), (3, "C"), (3, "A"), (3, "B"), (3, "A")))	
+		//Array[(Int, String)] = Array((1,A), (2,B), (2,D), (3,C), (3,A), (3,B), (3,A))  //  list of tuples
+
+myrdd.collectAsMap()
+		// scala.collection.Map[Int,String] = Map(2 -> D, 1 -> A, 3 -> A)				//only single block here.
+		//overwrite the values & take the latest one. In distributed environment ,with more than one block ,we cant garentee the same order.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+countByKey
+~~~~~~~~~~
+val myrdd = sc.parallelize(Seq((1, "A"), (2, "B"), (2, "D"), (3, "C"), (3, "A"), (3, "B"), (3, "A")))
+myrdd.countByKey()
+	//scala.collection.Map[Int,Long] = Map(1 -> 1, 3 -> 4, 2 -> 2)		//each key how many times occurred
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#FoldbyKey - 
+Functionality is similar to groupby.
+Similar to ReducebyKey, here we will provide an initial value and then reduce.
+Fold all the values Corresponding to a Key with an Initial value.
+foldLeft(default) and foldRight are also available
+
+val a = sc.parallelize(List("kim", "kumar", "muthu", "tim", "lak", "vamsi"),1)		// paralleling by 1 	//only single block here.
+val a = sc.parallelize(List("kim", "kumar", "muthu", "tim", "lak", "vamsi"),2)		// paralleling by 2 
+
+val b = a.map(x => (x.length, x))						// similar to val b = a.keyBy(_.length)
+							//o/p: res3: Array[(Int, String)] = Array((3,kim), (5,kumar), (5,muthu), (3,tim), (3,lak), (5,vamsi))
+b.foldByKey("::")(_ + _).collect			
+	res4: Array[(Int, String)] = Array((3,::kimtimlak), (5,::kumarmuthuvamsi))
+	here initial value is a string "::" and all other values strings will be merged
+Real-Time usecase : Different ATM withdrawal limit per day.Aggregate all the withdrawal amounts
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Handling Maps
+1.lookup
+~~~~~~
+# List of tuples having String as a key & another tuple as a value
+val deptEmployees = List(
+      ("dept1",("kumar1",1000.0)),
+      ("dept1",("kumar2",1200.0)),
+      ("dept2",("kumar3",2200.0)),
+      ("dept2",("kumar4",1400.0)),
+      ("dept2",("kumar5",1000.0)),
+      ("dept2",("kumar6",800.0)),
+      ("dept1",("kumar7",2000.0)),
+      ("dept1",("kumar8",1000.0)),
+      ("dept1",("kumar9",500.0))
+    )
+    
+    
+val employeeRDD = sc.makeRDD(deptEmployees)				# makeRDD similar to parallelise
+						//employeeRDD: org.apache.spark.rdd.RDD[(String, (String, Double))] = ParallelCollectionRDD[7] at makeRDD at <console>:23
+employeeRDD.lookup("dept1")								# get all the values for "dept1"
+						//res11: Seq[(String, Double)] = WrappedArray((kumar1,1000.0), (kumar2,1200.0), (kumar7,2000.0), (kumar8,1000.0), (kumar9,500.0))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2.mapValues
+~~~~~~~~~
+employeeRDD.collect
+	//Array[(String, (String, Double))] = Array((dept1,(kumar1,1000.0)), (dept1,(kumar2,1200.0)), (dept2,(kumar3,2200.0)), (dept2,(kumar4,1400.0)), (dept2,(kumar5,1000.0)), (dept2,(kumar6,800.0)), (dept1,(kumar7,2000.0)), (dept1,(kumar8,1000.0)), (dept1,(kumar9,500.0)))
+
+	//firt element is (dept1,(kumar1,1000.0)) .In this the value is tuple (kumar1,1000.0) . 
+	//In the tuple take the second element and multiply with 3	
+
+employeeRDD.mapValues(_._2*3).collect
+	//Array[(String, Double)] = Array((dept1,3000.0), (dept1,3600.0), (dept2,6600.0), (dept2,4200.0), (dept2,3000.0), (dept2,2400.0), (dept1,6000.0), (dept1,3000.0), (dept1,1500.0))
+
+employeeRDD.mapValues(":::" + _ + ":::").collect
+	//Array[(String, String)] = Array((dept1,:::(kumar1,1000.0):::), (dept1,:::(kumar2,1200.0):::), (dept2,:::(kumar3,2200.0):::), (dept2,:::(kumar4,1400.0):::), (dept2,:::(kumar5,1000.0):::), (dept2,:::(kumar6,800.0):::), (dept1,:::(kumar7,2000.0):::), (dept1,:::(kumar8,1000.0):::), (dept1,:::(kumar9,500.0):::))
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3.collectAsMap
+
+val myrdd = sc.parallelize(Seq((1, "A"), (2, "B"), (2, "D"), (3, "C"), (3, "A"), (3, "B"), (3, "A")))
+myrdd.collectAsMap()
+countByKey
+~~~~~~~~~~
+4.
+myrdd.countByKey()
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+partitionBy
+~~~~~~~~~~~
+val myrdd = sc.parallelize(List((1, "A"), (2, "B"), (2, "D"), (3, "C"), (3, "A"), (3, "B"), (3, "A")))
+myrdd.partitioner
+import org.apache.spark.HashPartitioner
+val afterpartition = myrdd.partitionBy(new HashPartitioner(3))
+afterpartition.partitioner
+
+afterpartition.countByKey()
+myrdd.countByKey()
+afterpartition.countByKey()
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+flatMapValues
+val myflatmaprdd = sc.parallelize(List((1, "Apple"), (2, "Ball"), (2, "Dog"), (3, "Cat"), (3, "Ant")))
+myflatmaprdd.flatMapValues(_.toUpperCase).collect()
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Double RDD Functions :
+
+val a = sc.parallelize(List(4.1, 1.0, 1.2, 6.3, 1.3, 2.0, 2.1, 2.1, 7.4, 7.5, 7.6, 8.8, 10.0, 8.9, 5.5))
+val b = sc.parallelize(List(2,3,4,5,6))
+
+
+a.mean
+a.sum
+a.variance
+a.stats		//res0: org.apache.spark.util.StatCounter = (count: 15, mean: 5.053333, stdev: 3.120655, max: 10.000000, min: 1.000000)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Join WithOut Partitioner: 
+
+---custs
+1	Vishal
+2	Vijay
+3	Vinay
+---custs_txns
+1	001	1563.47
+1	001	1456.98
+2	001	6734.08
+4	002	2455.98
+--
+case class Customer (cust_id: Int, name: String)
+case class Txn (cust_id: Int, store_id: String, amount: Float)
+
+
+val custs = sc.textFile("file:///home/edureka/demo_data/custs").map(_.split("\t"))
+val cust_recs = custs.map( r => (r(0).toInt, Customer(r(0).toInt, r(1))))					//key=cust_id & value=customer_record
+
+val txns = sc.textFile("file:///home/edureka/demo_data/custs_txns").map(_.split("\t"))
+val txns_recs = txns.map( r => (r(0).toInt, Txn(r(0).toInt, r(1), r(2).toFloat)))			//key=cust_id & value=transaction_record
+
+println(txns_recs.toDebugString)
+
+/*
+ * The lines below are showing various types of joins which are as easy as using a keyword!
+ */
+ 
+val joind = cust_recs.join(txns_recs)
+//res1: Array[(Int, (Customer, Txn))] = Array((1,(Customer(1,Vishal),Txn(1,001,1563.47))), 
+											  (1,(Customer(1,Vishal),Txn(1,001,1456.98))), (2,(Customer(2,Vijay),Txn(2,001,6734.08))))
+
+val leftOuterjoind = cust_recs.leftOuterJoin(txns_recs)
+val cartesianJoined = cust_recs.cartesian(txns_recs)
+val cogrpd = cust_recs.cogroup(txns_recs)
+
+ //joind.foreach(println)
+//leftOuterjoind.foreach(println)
+//cartesianJoined.foreach(println)
+//cogrpd.foreach(println)
+	
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Join with Partitioner: [USED FOR LARGE DATASETS TO AVOID NETWORK TRAFFIC] 
+
+	HashPartitioner - Identify the hash values and segregate the values. Example : 1 million records need to split into 5 buckets(For Structured data,to overcome this kind of scenarios ,sparkSQL ,hive are evolved)
+
+import org.apache.spark.HashPartitioner
+
+case class Customer (cust_id: Int, name: String)
+case class Txn (cust_id: Int, store_id: String, amount: Float)
+
+
+val custs = sc.textFile("file:///home/edureka/demo_data/custs").map(_.split("\t"))
+val cust_recs = custs.map( r => (r(0).toInt, Customer(r(0).toInt, r(1))))
+
+
+val txns = sc.textFile("file:///home/edureka/demo_data/custs_txns").map(_.split("\t"))
+/*
+ * In the line below, we are partitioning the txns dataset to multiple partitions
+ * This will help when the join will be performed with other dataset
+ * It will result into lesser flow of data in the network
+ */
+val txns_recs_par = txns.map( r => (r(0).toInt, Txn(r(0).toInt, r(1), r(2).toFloat))).partitionBy(new HashPartitioner(2))
+
+val joind = cust_recs.join(txns_recs_par)
+val leftOuterjoind_par = cust_recs.leftOuterJoin(txns_recs_par)
+val cogrpd_par = cust_recs.cogroup(txns_recs_par)
+
+
+// joind.foreach(println)
+leftOuterjoind_par.foreach(println)
+
+cogrpd_par.foreach(println)
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

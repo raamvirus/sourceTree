@@ -1,0 +1,70 @@
+﻿Module-4
+------------------------------------------------------------------------------------------------------------
+Slide-80:
+LAZY : data->RDD1->(transformed to)RDD2->(action)RESULT
+-----------------------------------------------------------------------------------------------------
+Slide-81 :
+same filter can be done in Scala & Spark.
+But if we use Scala, we cant have parallelism and consolidation across the blocks
+-----------------------------------------------------------------------------------------------------
+SCALA VARAIBLE can exist in one machine . So action collect stores the values in a Scala variable
+RDD can exist in many MAchines
+------------------------------------------------------------------------------------------------------
+Slide-82
+Read fileA ;FilteredValue = Filter FileA only errors ; Write Filtered Value as Result.txt(large file of 128mb)
+		Result.txt - > R1 block(64 mb) and R2 block(64 mb)
+						R1 – N1, N2, N4(replicated on 3 nodes)
+						R2 – N4, N3, N1(replicated on 3 nodes)
+------------------------------------------------------------------------------------------------------
+
+http://spark.apache.org/docs/latest/api/scala/#org.apache.spark.SparkContext
+	def textFile(path: String, minPartitions: Int = defaultMinPartitions): RDD[String]
+		Read a text file from HDFS, a local file system (available on all nodes), 
+		or any Hadoop-supported file system URI(like S3), 
+		and return it as an RDD of Strings.
+------------------------------------------------------------------------------------------------------		
+Slide-84 :
+
+1.Run Rdd1.count created from File.(took 2 sec)
+2.Rerun Rdd1.count (took 1.5 sec) since already rdd is created 
+3.Likewise a number of RDDs were created in Memory . At some point they were cleaned up from memory( garbage collection)
+-----------------------------------------------------------------------------------------------------------------------------
+
+cat spark-defaults.conf.template 
+
+# spark.master                     spark://master:7077
+# spark.eventLog.enabled           true
+# spark.eventLog.dir               hdfs://namenode:8021/directory
+# spark.serializer                 org.apache.spark.serializer.KryoSerializer ---- serialization used to transfer data from one system to another
+# spark.driver.memory              5g
+# spark.executor.extraJavaOptions  -XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"
+-------------------------------------------------------------------------------------------------------------------------------------
+Properties Precedence :
+	So Never Hard Code the Properties in the program , Pass via cmd line
+
+spark-env.sh - java home	
+
+http://spark.apache.org/docs/latest/configuration.html - Default values
+
+--driver-memory 512m 
+--class org.apache.spark.examples.SparkPi 
+--master local[8] 
+--num-executors 3 
+--executor-memory 512m 
+--executor-cores 1 
+
+One executor per node.With in each executor we can run tasks.
+
+Note :Worker Node of 64gb RAM of which 30%[20gb] is used to maintain the node overhead & rest  can be used for Spark Executor, Hbase regional server .
+		So we specify executor-memory 1gb for Spark and not complete.
+--------------------------------------------------------------------------------------------------------------------------------------------
+spark.shuffle.spill = while consolidating data from n number of nodes , it might run out of space. So it has to fall back to harddisk.
+						% can be specified by "spark.shuffle.memoryFraction"
+						Compression can also be done by "spark.shuffle.spill.compress = true" [Space efficient .But it consume compute power]
+-------------------------------------------------------------------------------------------------------------------------------------------						
+sbteclipse image
+----------------------------------------------------------------------------------------------------------------------------------------------
+Spark-modes image
+
+client mode  : driver program is created where we trigger this cmd
+cluster mode : driver program will created in any node .Fire and forget like an background process

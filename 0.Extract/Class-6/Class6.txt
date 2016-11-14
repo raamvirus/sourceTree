@@ -1,0 +1,64 @@
+Module-3:
+Mahout - replaced by in-memory tools like spark or flink(stream processing)
+
+Graphx - USECASE :2000 parcels to be delivered  . We have 10 Trucks (each has a limitations like Volume,Weight ,Time Duration & Distance it can travel )
+		 GOAL : 10 truck with minimum weight , volume ,time,distance need to cover all the 2000 GPS locations
+https://github.com/muthu4all/SMAC/blob/master/Scala_SparkRef.txt [ http://world.mathigon.org/Graph_Theory ]
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+Blink DB - in google search Spark vs Flink Machine learning 
+			[ About 12,90,000 results (0.35 seconds)& About 94,800 results (0.38 seconds) ] ---> Approximate Numbers less than 1 min
+			:: Infer which is more popular
+
+We can sacrifice either Time or Accuracy . Quires with time bound VS  Quires with Accuracy Bound
+http://blinkdb.org/
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+https://spark-packages.org/
+spark-shell --packages it.nerdammer.bigdata:spark-hbase-connector_2.10:1.0.3
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+Spark is a Framework (api,libraries)  : we can bring in componets like graphx,sparksql,etc (slide-71)
+
+Streaming Data : Strom on hadoop & Spark Streaming on Spark
+----------------------------------------------------------------------------------------------------------------------------------------------------
+Download : spark-1.5.2 is more stable one + pre build with hadoop option
+----------------------------------------------------------------------------------------------------------------------------------------------------
+Slide 73: DAG(for lazy processing)
+
+1 is the input & 8 is the output
+3 needs s as input
+(10,9) & (4,7) are parallel process
+8 needs 9 & 7 as input
+-------
+5 & 6 can be skipped .So an DAG is generated that skips this part
+-------
+If 10 is lost,it will fetch data from 3 & regenerate it ,Instead of from 1
+
+####################################################################################################################################################
+RESILIENT-if any data is lost on any node,it will be recreated DISTRIBUTED DATASETS (RDD)
+
+http://spark.apache.org/docs/latest/api/scala/#org.apache.spark.rdd.RDD ---> search of filter
+######################################################################################################################################################
+Architecture :
+
+1.200MB file is split into Block1 & Block2 & these blocks are replicated across machines
+2.First we will get b1 & b2 to an abstract layer called RDD [ not all the data will be in RDD .Only the data based on DAG is in RDD ] 
+	RDD is created at Worker Node(i.e Data Node)
+3.Spark Context acts as single point between Client & Cluster to manage the jobs 
+4.Client(or driver program) Submits a job with details like file path,logic,amount of caching etc . Which first contacts the SC then it contacts the 
+	Cluster Manager(yarn)
+5.Cluster Manager : Now executor are created on the machines having the blocks ,which can access the abstract layer(i.e RDD) 
+6.Spark Context object sends the application code (jar files/python scripts) to executors
+
+
+Note : Non-Iterative tasks with Spark is an overhead
+
+#######################################################################################################################################################
+Start Master : ./sbin/start-master.sh
+Master Web UI : localhost:8080
+-----------------------------------------------
+we can start N num of workers and attach it to the master
+
+Start Slave (Worker) : ./sbin/start-slave.sh spark://localhost.localdomain:7077
+Slave Web UI        : localhost:8081
+-------------------------------------------------------------------------------------
+image1,2
+Module3.txt

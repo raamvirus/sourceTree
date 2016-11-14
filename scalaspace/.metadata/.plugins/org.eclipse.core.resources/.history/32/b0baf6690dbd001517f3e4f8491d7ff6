@@ -1,0 +1,15 @@
+/*This code shows the example of closures.  */
+
+object Main13 extends App {
+
+  def mulBy(factor : Double) = { (x : Double) => factor * x }
+	//this takes double as i/p & returns a function
+//------------------------------------------------------------------------//
+  val triple = mulBy(3) // o/p function is x=>3*x
+	println(triple)
+	println(triple(2))
+//------------------------------------------------------------------------//
+  val half = mulBy(0.5) // o/p is x => 0.5*x
+//------------------------------------------------------------------------//
+  println(triple(14) + " "+ half(14))
+}

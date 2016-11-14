@@ -1,0 +1,29 @@
+# Start Master
+
+
+./sbin/start-master.sh
+
+localhost:8080
+		[Spark master URL : spark://localhost.localdomain:7077 ]
+		[No Workers are started]
+----------------------------------------------------------------------------
+# Start Worker connecting it to the master
+
+./sbin/start-slave.sh spark://localhost.localdomain:7077
+						[Now a worker is attached to Master]
+localhost:8081
+		[No Executor is assigned ]
+----------------------------------------------------------------------------
+./sbin/stop-all.sh
+----------------------------------------------------------------------------
+#Start Spark Shell connecting it to the master
+
+./bin/spark-shell spark://localhost.localdomain:7077
+
+localhost:4040
+----------------------------------------------------------------------------
+
+
+
+
+

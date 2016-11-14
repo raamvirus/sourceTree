@@ -1,0 +1,76 @@
+SQL context available as sqlContext.
+
+scala> import org.apache.spark.SparkContext
+		import org.apache.spark.SparkContext
+
+scala> import org.apache.spark.sql._
+		import org.apache.spark.sql._
+
+scala> val sqlContx = new SQLContext(sc)
+sqlContx: org.apache.spark.sql.SQLContext = org.apache.spark.sql.SQLContext@7b3efe
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+scala> val df = sqlContext.createDataFrame(List(("myself",1)))
+df: org.apache.spark.sql.DataFrame = [_1: string, _2: int]               //takes time since schema is loaded
+
+scala> df.toDF("name","count")
+res0: org.apache.spark.sql.DataFrame = [name: string, count: int]
+
+scala> df.toDF("name","count").show()
++------+-----+
+|  name|count|
++------+-----+
+|myself|    1|
++------+-----+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+scala> case class Author(name: String, nbBooks: Int)
+defined class Author
+
+scala> val sc = new SparkContext()
+16/03/02 00:03:23 INFO spark.SparkContext: Running Spark version 1.5.2
+
+scala>   val sqlContext = new SQLContext(sc)
+sqlContext: org.apache.spark.sql.SQLContext = org.apache.spark.sql.SQLContext@1010d2b
+
+scala> val rdd = sc.parallelize(List(Author("raam",32),(Author("rani",1))))
+rdd: org.apache.spark.rdd.RDD[Author] = ParallelCollectionRDD[0] at parallelize at <console>:27
+
+scala> rdd.toDF.show()
+16/03/02 00:06:41 INFO spark.SparkContext: Starting job: show at <console>:30
++----+-------+
+|name|nbBooks|
++----+-------+
+|raam|     32|
+|rani|      1|
++----+-------+
+
+scala> val df = rdd.toDF("name","count")
+df: org.apache.spark.sql.DataFrame = [name: string, count: int]
+
+scala> df.printSchema()
+root
+ |-- name: string (nullable = true)    ---yes nullable
+ |-- count: integer (nullable = false)  ---not nullable
+ 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+scala> case class Author(name: String, nbBooks: Int)
+		defined class Author
+
+scala> val rdd = sc.parallelize(List(Author("raam",32),(Author("rani",1))))
+		rdd: org.apache.spark.rdd.RDD[Author] = ParallelCollectionRDD[0] at parallelize at <console>:23
+
+scala> val df = sqlContext.createDataFrame(rdd, classOf[Author])
+		df: org.apache.spark.sql.DataFrame = []
+
+scala> df.show()
+++
+||
+++
+||
+||
+++
+
+scala> df.printSchema()
+root
+

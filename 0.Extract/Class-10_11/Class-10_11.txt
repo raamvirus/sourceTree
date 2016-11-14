@@ -1,0 +1,71 @@
+http://twitter.github.io/scala_school/
+
+-------------------------------------------------------------
+place where .sbt is available : cd /home/edureka/scalaspace/myProject
+~~~~~~~~~~~~~~~~~~~~~~~~~~To create a jar
+sbt package
+/home/edureka/scalaspace/myProject/target/scala-2.10/hello_2.10-1.0.jar
+~~~~~~~~~~~~~~~~~~~~~~~~~~To create a Eclipse Project
+sbt eclipse
+import "Existing projects into Workspace"
+right click --> Properties -->Java Build Path
+
+wordcount with HDFS
+
+./bin/spark-submit --class "WordCount" --master local /home/edureka/15feb/server-log-analysis_2.10-1.0.jar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+./bin/spark-submit --class "WordCount" --master yarn /home/edureka/15feb/wordcount/target/scala-2.10/wordcount_2.10-1.0.jar						     
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[edureka@localhost spark-1.5.2]$ 
+./bin/spark-submit --class "Hi" --master local /home/edureka/scalaspace/myProject/target/scala-2.10/hello_2.10-1.0.jar
+Hi World!
+./bin/spark-submit --class "Hi" --master yarn <yarn://hostname:portno/param> /home/edureka/scalaspace/myProject/target/scala-2.10/hello_2.10-1.0.jar
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+			################################## Spark Streaming ##################################################
+Real Time : less than sec. Now and then Processing.
+Near RT :(Micro Batch) 
+Advantage of Messaging system is Asynchronous Process (not worried about src & destinations downs/breaks etc)
+
+---------------------------------------------------------------------------------------------------------------------------------
+STEPS :
+
+1. val sparkConf = new SparkConf().setAppName("StreamingWordCount")
+```````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+2. val ssc = new StreamingContext(sparkConf, Seconds(2))----here micro batch of 2 sec  [ analogous : val sc = new SparkContext(conf) ]
+
+	Dstream : Break the continuous data into Micro Batches & one RDD from each microBatch . So DStream is sequence of RDDs.  
+	discretized Steram : non-continuous  Stream . Means continuous pieces[RDDs]
+3.Define Input Src like HDFS,KAFKA/KINESIS,Socket etc
+	val lines = ssc.textFileStream("/home/user/spark_datasets/streaming_dir")
+	val lines = ssc.socketTextStream("localhost",9999) ---> Creating Dstream from data over socket
+````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+4.Apply Dstream Transformations[ same as of sc transformations ]
+	val words = lines.flatMap(_.split(" "))
+	val wordCounts = words.map(x => (x, 1)).reduceByKey(_ + _) // even we can join two Dstreams using "join(otherStream)"
+5.Output [Action] Operations to Dsteam
+		wordCounts.print()----------------------> need to persist this RDDs to Hbase/solr ,else it will be lost after sometime
+6.Start Streaming process & Stop when a termination is received.
+	ssc.start()
+	ssc.awaitTermination()
+---------------------------------------------------------------------------------------------------------------------------
+AWS Cluster : 1hr 44 mins	(class-10)
+--------------------------------------------------------------------------------------------------------------------------
+CLass-11:
+
+setMaster("local[2]")--->two threads for processing locally. it depends up on the multi-core processor .Each core will be used to process the thread.
+module-6 code
+slide-125 for window function
+``````````````````````````````````````````````````````````````````````````````````````````````````
+CheckPoining : 
+Intermediate RDDs are checked periodically to reliable storage.
+if the microbatch is small & if we enable check point...we flooding NFS with high amount of thoughput.
+its advisable if the rolling windown time is high like 10 hrs.
+-------------------------------------------------------------------------------------------------------------------------------------
+
+`````````````````````````````````````````````` MLLib ````````````````````````````````````````````````````````````````````````````````````
+Class-11 & Time : 1:00
+```````````````````````````````
+Slide-126 : 100 images give to 3-old kid to categories based on  20 examples
+Slide-127 : Teach the kid to identify based on wings etc. The kid will improve over a period of time.

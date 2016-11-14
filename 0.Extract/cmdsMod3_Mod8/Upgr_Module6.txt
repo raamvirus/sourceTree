@@ -1,0 +1,40 @@
+Streaming
+~~~~~~~~~
+
+Source : https://github.com/apache/spark/blob/master/examples/src/main/scala/org/apache/spark/examples/streaming/KafkaWordCount.scala
+
+bin/run-example org.apache.spark.examples.streaming.NetworkWordCount localhost 9999
+
+./bin/spark-submit --class "org.apache.spark.examples.streaming.NetworkWordCount" --master local[2] /home/ec2-user/01aug/spark-1.4.1-bin-hadoop2.6/lib/spark-examples-1.1.0-hadoop2.3.0.jar localhost 9999
+
+./bin/spark-submit --class "NetworkWordCount" /home/edureka/05jan/network-wordcount_2.10-1.0.jar localhost 9999
+```````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+#Install net cat
+sudo yum install nc
+
+nc -lk 9999
+hello world hello
+
+ -l      Used to specify that nc should listen for an incoming connection
+             rather than initiate a connection to a remote host.  It is an
+             error to use this option in conjunction with the -p, -s, or -z
+             options.  Additionally, any timeouts specified with the -w option
+             are ignored.
+             
+ -k      Forces nc to stay listening for another connection after its cur-
+             rent connection is completed.  It is an error to use this option
+             without the -l option. 
+             
+             
+             
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+MLLib
+
+
+             
+             
+             
+             
+
+
